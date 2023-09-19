@@ -1,101 +1,154 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userschema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please enter a name"],
     },
-    surname:{
-        type:String,
-        required:[true,"Please enter a surname"],
+    surname: {
+        type: String,
+        required: [true, "Please enter a surname"],
     },
-    student_id:{
-        type:String,
-        required:[true,"Please enter a student id"],
-        unique:true,
+    student_id: {
+        type: String,
+        required: [true, "Please enter a student id"],
+        unique: true,
     },
     email: {
-        type: String,
-        required: [true, "Please enter a email"],
+        type: {
+            main: {
+                type: String,
+                required: [true, "Please enter a main email"],
+                unique: true,
+            },
+            alt: {
+                type: String,
+                required: [true, "Please enter a alt email"],
+                unique: true,
+            }
+        },
         unique: true,
     },
     password: {
+        type: {
+            main: {
+                type: String,
+                required: [true, "Please enter a password"],
+            },
+            alt: {
+                type: String,
+                required: [true, "Please enter confirm password"],
+            }
+        },
+    },
+    skype_id: {
         type: String,
-        required: [true, "Please enter a password"],
+        required: [true, "Please enter a skype id"],
     },
-    skype_id:{
-        type:String,
-        required:[true,"Please enter a skype id"],
+    phone_number: {
+        type: {
+            main: {
+                type: String,
+                required: [true, "Please enter a phone number"],
+            },
+            alt: {
+                type: String,
+                required: [true, "Please enter a alt phone number"],
+            }
+        }
     },
-    Date_of_birth:{
-        type:Date,
-        required:[true,"Please enter a date of birth"],
+    Gender: {
+        type: String,
+        required: [true],
     },
-    phone_number:{
-        type:String,
-        required:[true,"Please enter a phone number"],
+    Date_of_birth: {
+        type: Date,
+        required: [true, "Please enter a date of birth"],
     },
-    alt_phone_number:{
-        type:String,
-        required:[true,"Please enter a alt phone number"],
+    father_name: {
+        type: String,
+        required: [true, "Please enter a father name"],
     },
-    father_name:{
-        type:String,
-        required:[true,"Please enter a father name"],
+    mother_name: {
+        type: String,
+        required: [true, "Please enter a mother name"],
     },
-    mother_name:{
-        type:String,
-        required:[true,"Please enter a mother name"],
+    address: {
+        type: {
+            per_address: {
+                type: String,
+                required: [true, "Please enter a permanent address"],
+            },
+            cur_address: {
+                type: String,
+                required: [true, "Please enter a current address"],
+            },
+        }
     },
-    per_address:{
-        type:String,
-        required:[true,"Please enter a permanent address"],
+    results: {
+        type: {
+            tenth_percentage: {
+                type: Number,
+                required: [true, "Please enter a 10th percentage"],
+            },
+            twelve_percentage: {
+                type: Number,
+                required: [true, "Please enter a 12th percentage"],
+            },
+        },
+        required: [true, "Please enter results"],
     },
-    cur_address:{
-        type:String,
-        required:[true,"Please enter a current address"],
+    cpi: {
+        type: Number,
+        required: [true, "Please enter a CPI"],
     },
-    tenth_percentage:{
-        type:Number,
-        required:[true,"Please enter a 10th percentage"],
+    academics: {
+        type: {
+            branch: {
+                type: String,
+                required: [true, "Please enter a branch"],
+            },
+            current_backlogs: {
+                type: Number,
+                required: [true, "Please enter a current backlogs"],
+            },
+            total_backlogs: {
+                type: Number,
+                required: [true, "Please enter a total backlogs"],
+            },
+        }
     },
-    twelve_percentage:{
-        type:Number,
-        required:[true,"Please enter a 12th percentage"],
+    resume: {
+        type: String,
+        required: [true, "Please upload a resume"],
     },
-    cpi:{
-        type:Number,
-        required:[true,"Please enter a CPI"],
+    profile_pic: {
+        type: String,
+        required: [true, "Please upload a profile pic"],
     },
-    branch:{
-        type:String,
-        required:[true,"Please enter a branch"],
+    in_drive: {
+        type: Boolean,
+        required: [true, "Please enter a interested in"],
     },
-    registering_for:{
-        type:String,
-        required:[true,"Please enter a registering for"],
+    registering_for: {
+        type: String,
+        required: [true, "Please select a registering for"],
     },
-    in_drive:{
-        type:Boolean,
-        required:[true,"Please enter a interested in"],
-    },
-    current_backlogs:{
-        type:Number,
-        required:[true,"Please enter a current backlogs"],
-    },
-    total_backlogs:{
-        type:Number,
-        required:[true,"Please enter a total backlogs"],
-    },
-    resume:{
-        type:String,
-        required:[true,"Please enter a resume"],
-    },
-
-
-
+    domain: {
+        type: String,
+        required: [true, "Please select a domain"],
+    }
 }, {
     timestamp: true
+})
+
+userschema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        next()
+    }
+    const salt = await bcrypt.genSalt(11);
+    this.password.main = await bcrypt.hash(this.password.main, salt);
 })
 
 
