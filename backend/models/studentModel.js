@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userschema = new mongoose.Schema({
+const studentSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please enter a name"],
@@ -28,19 +28,10 @@ const userschema = new mongoose.Schema({
                 unique: true,
             }
         },
-        unique: true,
     },
     password: {
-        type: {
-            main: {
-                type: String,
-                required: [true, "Please enter a password"],
-            },
-            alt: {
-                type: String,
-                required: [true, "Please enter confirm password"],
-            }
-        },
+        type: String,
+        required: [true, "Please enter a password"],
     },
     skype_id: {
         type: String,
@@ -49,20 +40,20 @@ const userschema = new mongoose.Schema({
     phone_number: {
         type: {
             main: {
-                type: String,
+                type: Number,
                 required: [true, "Please enter a phone number"],
             },
             alt: {
-                type: String,
+                type: Number,
                 required: [true, "Please enter a alt phone number"],
             }
         }
     },
-    Gender: {
+    gender: {
         type: String,
         required: [true],
     },
-    Date_of_birth: {
+    dob: {
         type: Date,
         required: [true, "Please enter a date of birth"],
     },
@@ -121,15 +112,15 @@ const userschema = new mongoose.Schema({
     },
     resume: {
         type: String,
-        required: [true, "Please upload a resume"],
+        // required: [true, "Please upload a resume"],
     },
     profile_pic: {
         type: String,
-        required: [true, "Please upload a profile pic"],
+        // required: [true, "Please upload a profile pic"],
     },
     in_drive: {
         type: Boolean,
-        required: [true, "Please enter a interested in"],
+        // required: [true, "Please enter a interested in"],
     },
     registering_for: {
         type: String,
@@ -137,19 +128,12 @@ const userschema = new mongoose.Schema({
     },
     domain: {
         type: String,
-        required: [true, "Please select a domain"],
+        // required: [true, "Please select a domain"],
     }
 }, {
     timestamp: true
 })
 
-userschema.pre('save', async function (next) {
-    if (!this.isModified('password')) {
-        next()
-    }
-    const salt = await bcrypt.genSalt(11);
-    this.password.main = await bcrypt.hash(this.password.main, salt);
-})
 
 
-module.exports = mongoose.model("User", userschema);
+module.exports = mongoose.model("Student", studentSchema);

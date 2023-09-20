@@ -24,14 +24,8 @@ const company_schema = new mongoose.Schema({
     },
     password: {
         type: {
-            main: {
-                type: String,
-                required: [true, "Please enter a password"],
-            },
-            alt: {
-                type: String,
-                required: [true, "Please enter a alt password"],
-            }
+            type: String,
+            required: [true, "Please enter a password"],
         }
     },
     wewbsite: {

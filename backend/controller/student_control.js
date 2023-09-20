@@ -1,5 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const student = require('../models/studentModel');
+const bcrypt = require('bcryptjs');
+
+
 
 //access public
 //route api/student/auth
@@ -17,10 +20,11 @@ const auth_student = asyncHandler(async (req, res) => {
 //route api/student/register
 //desc register student
 const register_student = asyncHandler(async (req, res) => {
-    const { name, surname, student_id, email, alt_email, password, conf_password, skype_id, mobile_no, alt_mobile_no, gender, dob, father_name, mother_name, per_address, cur_address, tenth_percentage, twelve_percentage, cpi, current_backlog, total_baccklog, branch, registering_for, domain } = req.body;
+    const { name, surname, student_id, email, alt_email, password, skype_id, mobile_no, alt_mobile_no, gender, dob, father_name, mother_name, per_address, cur_address, tenth_percentage, twelve_percentage, cpi, current_backlog, total_backlog, branch, registering_for } = req.body;
     // console.log("ok");
     // const { email, alt_email } = req.body;
     // console.log(req.body);
+
 
     const test = {
         type: {
@@ -36,21 +40,47 @@ const register_student = asyncHandler(async (req, res) => {
     }
 
     // console.log(test);
+    const salt = await bcrypt.genSalt(11);
+    console.log(password)
+    const hashedPassword = await bcrypt.hash(password, salt);
     const reg_student = await student.create({
         name: name,
         surname: surname,
         student_id: student_id,
         email: {
-            type: {
-                main: email,
-                alt: alt_email
-            }
+            main: email,
+            alt: alt_email
         },
-
+        password: hashedPassword,
+        skype_id: skype_id,
+        phone_number: {
+            main: mobile_no,
+            alt: alt_mobile_no
+        },
+        gender: gender,
+        dob: dob,
+        father_name: father_name,
+        mother_name: mother_name,
+        address: {
+            per_address: per_address,
+            cur_address: cur_address
+        },
+        results: {
+            tenth_percentage: tenth_percentage,
+            twelve_percentage: twelve_percentage
+        },
+        cpi: cpi,
+        academics: {
+            branch: branch,
+            current_backlogs: current_backlog,
+            total_backlogs: total_backlog
+        },
+        registering_for: registering_for,
     })
     res.status(201).json({
         message: "register",
-        test
+        name: reg_student.name,
+        email: reg_student.email.main
     })
 })
 
