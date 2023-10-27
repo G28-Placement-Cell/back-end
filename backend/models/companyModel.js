@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcryptjs");
 
 const companySchema = new mongoose.Schema({
     name: {
@@ -23,12 +23,10 @@ const companySchema = new mongoose.Schema({
         required: [true, "Please enter a email"],
     },
     password: {
-        type: {
-            type: String,
-            required: [true, "Please enter a password"],
-        }
+        type: String,
+        required: [true, "Please enter a password"],
     },
-    wewbsite: {
+    website: {
         type: String,
         required: [true, "Please enter a website"],
     },
@@ -38,6 +36,14 @@ const companySchema = new mongoose.Schema({
             ref: 'jobProfile'
         }
     ],
+});
+
+companySchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
 module.exports = mongoose.model("Company", companySchema);
