@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 
-const company_schema = new mongoose.Schema({
+const companySchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please enter a name"],
@@ -32,6 +32,12 @@ const company_schema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter a website"],
     },
+    job_profiles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'jobProfile'
+        }
+    ],
 });
 
-module.exports = mongoose.model("company", company_schema);
+module.exports = mongoose.model("Company", companySchema);
