@@ -100,12 +100,15 @@ const login_student = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Invalid credentials')
     }
-    generateToken(res, studentExists._id);
+
+    const tok = await generateToken(res, studentExists._id);
+    console.log(tok);
     console.log("hurray")
     res.status(201).json({
         message: "login",
         name: studentExists.name,
-        email: studentExists.email.main
+        email: studentExists.email.main,
+        token: tok
     })
 })
 
@@ -118,6 +121,8 @@ const log_out_student = asyncHandler(async (req, res) => {
         httpOnly: true,
         expires: new Date(0),
     })
+
+    // localStorage.removeItem('token');
 
     res.status(201).json({
         message: "logged out"

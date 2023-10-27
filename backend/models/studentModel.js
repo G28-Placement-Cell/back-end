@@ -130,6 +130,10 @@ const studentSchema = new mongoose.Schema({
     domain: {
         type: String,
         // required: [true, "Please select a domain"],
+    },
+    verified:{
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamp: true
