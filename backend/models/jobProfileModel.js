@@ -18,7 +18,7 @@ const jobProfileSchema = new mongoose.Schema({
         required: [true, "Please enter a open for"],
     },
     cpi_criteria: {
-        type: String,
+        type: Number,
         required: [true, "Please enter a cpi criteria"],
     },
     ctc: {
