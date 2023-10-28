@@ -10,7 +10,7 @@ const connect = require('./config/db');
 const cookieParser = require('cookie-parser');
 connect();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 
 
 app.use(cors({
