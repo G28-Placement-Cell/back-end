@@ -409,7 +409,7 @@ module.exports = {
     updateJobProfileById,
     applyJobProfileById,
     viewApplicantsById,
-    announceResultById,
+    // announceResultById,
     addAnnouncement,
     viewAnnouncement,
     viewAnnouncementById,
