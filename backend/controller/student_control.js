@@ -20,7 +20,7 @@ const auth_student = asyncHandler(async (req, res) => {
 //route api/student/register
 
 const register_student = asyncHandler(async (req, res) => {
-    const { name, surname, student_id, email, alt_email, password, skype_id, mobile_no, alt_mobile_no, gender, dob, father_name, mother_name, per_address, cur_address, tenth_percentage, twelve_percentage, cpi, current_backlog, total_backlog, branch, registering_for } = req.body;
+    const { name, surname, student_id, fath_name, moth_name, permanent_address, current_address, cpi, current_backlogs, total_backlogs, skype_id, phone, alt_phone, dob, tenth_percentage, twelth_percentage, branch, domain, regfor, email, password, altemail, altpassword, gender } = req.body;
     // console.log("ok");
     // const { email, alt_email } = req.body;
     // console.log(req.body);
@@ -43,43 +43,46 @@ const register_student = asyncHandler(async (req, res) => {
         student_id: student_id,
         email: {
             main: email,
-            alt: alt_email
+            alt: altemail
         },
         password: password,
         skype_id: skype_id,
-        phone_number: {
-            main: mobile_no,
-            alt: alt_mobile_no
-        },
         gender: gender,
         dob: dob,
-        father_name: father_name,
-        mother_name: mother_name,
+        father_name: fath_name,
+        mother_name: moth_name,
         address: {
-            per_address: per_address,
-            cur_address: cur_address
+            per_address: permanent_address,
+            cur_address: current_address
         },
         results: {
             tenth_percentage: tenth_percentage,
-            twelve_percentage: twelve_percentage
+            twelve_percentage: twelth_percentage
         },
         cpi: cpi,
         academics: {
             branch: branch,
-            current_backlogs: current_backlog,
-            total_backlogs: total_backlog
+            current_backlogs: current_backlogs,
+            total_backlogs: total_backlogs
         },
-        registering_for: registering_for,
+        registering_for: regfor,
+        domain: domain,
+        phone_number: {
+            main: phone,
+            alt: alt_phone
+        },
     })
     if (!reg_student) {
         res.status(400)
         throw new Error('Student not registered')
     }
-    generateToken(res, reg_student._id);
+    const tok = await generateToken(res, reg_student._id);
     res.status(201).json({
         message: "register",
-        name: reg_student.name,
-        email: reg_student.email.main
+        // name: reg_student.name,
+        // email: reg_student.email.main
+        student_id: reg_student.student_id,
+        token: tok
     })
 })
 
@@ -106,8 +109,9 @@ const login_student = asyncHandler(async (req, res) => {
     console.log("hurray")
     res.status(201).json({
         message: "login",
-        name: studentExists.name,
-        email: studentExists.email.main,
+        // name: studentExists.name,
+        // email: studentExists.email.main,
+        student_id: studentExists.student_id,
         token: tok
     })
 })
@@ -134,11 +138,11 @@ const log_out_student = asyncHandler(async (req, res) => {
 
 
 const get_student_profile = asyncHandler(async (req, res) => {
-    // const stu=await student.findOne(req._id);
-    const stu = {
-        name: req.student.name,
-        student_id: req.student.student_id
-    }
+    const stu = await student.findOne(req._id);
+    // const stu = {
+    //     name: req.student.name,
+    //     student_id: req.student.student_id
+    // }
     res.status(201).json({
         stu
     })

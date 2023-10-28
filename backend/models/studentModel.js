@@ -131,7 +131,7 @@ const studentSchema = new mongoose.Schema({
         type: String,
         // required: [true, "Please select a domain"],
     },
-    verified:{
+    verified: {
         type: Boolean,
         default: false,
     }
