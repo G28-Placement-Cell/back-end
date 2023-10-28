@@ -21,7 +21,7 @@ const {
     deleteAnnouncementById,
     updateAnnouncementById,
     viewStudentsByJobProfileId
-} = require('../controller/company_control');
+} = require('../controller/companyController');
 
 router.post('/auth', authCompany);
 router.post('/register', registerCompany);
@@ -35,7 +35,7 @@ router.delete('/deletejobprofile/:id', protect, deleteJobProfileById);
 router.put('/updatejobprofile/:id', protect, updateJobProfileById);
 router.post('/applyjobprofile/:id', protect, applyJobProfileById);
 router.get('/viewapplicants/:id', protect, viewApplicantsById);
-router.put('/announceresult/:id', protect, announceResultById);
+// router.put('/announceresult/:id', protect, announceResultById);
 router.post('/addannouncement', protect, addAnnouncement);
 router.get('/viewannouncement', protect, viewAnnouncement);
 router.get('/viewannouncement/:id', protect, viewAnnouncementById);
