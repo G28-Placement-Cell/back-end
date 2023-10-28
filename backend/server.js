@@ -10,7 +10,7 @@ const connect = require('./config/db');
 const cookieParser = require('cookie-parser');
 connect();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 
 
 app.use(cors({
@@ -27,6 +27,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/student', require('./router/student_route'));
+app.use('/api/company', require('./router/company_route'));
+app.use('/api/jobprofile', require('./router/jobProfileRoutes'));
+app.use('/api/announcements', require('./router/announcementRoutes'));
 
 
 app.use(errorHandler);
