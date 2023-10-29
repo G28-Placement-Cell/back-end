@@ -4,7 +4,6 @@ const student = require('../models/studentModel');
 
 const protect = asyncHandler(async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
-    console.log(token);
     if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
