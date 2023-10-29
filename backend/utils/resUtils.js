@@ -1,4 +1,4 @@
-const { validationResult } = require('express-validator');
+// const { validationResult } = require('express-validator');
 
 const sendErrorResponse = (res, statusCode, message) => {
     res.status(statusCode).json({ error: message });

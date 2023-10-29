@@ -1,14 +1,15 @@
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
-const student = require('../models/studentModel');
+const company = require('../models/companyModel');
 
 const protect = asyncHandler(async (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
+    let token;
+    token = localStorage.getItem('token');
     console.log(token);
     if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.student = await student.findById(decoded.id).select('-password');
+            req.company = await company.findById(decoded.id).select('-password');
             next();
         }
         catch (error) {
@@ -20,7 +21,6 @@ const protect = asyncHandler(async (req, res, next) => {
         res.status(401);
         throw new Error('Not authorized, no token');
     }
-
 })
 
 module.exports = protect;
