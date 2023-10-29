@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const protect = require('../middleware/authmiddleware');
+const protect = require('../middleware/authCompMiddleware');
 const {
     authCompany,
     registerCompany,
@@ -26,7 +26,7 @@ const {
 router.post('/auth', authCompany);
 router.post('/register', registerCompany);
 router.post('/login', loginCompany);
-router.get('/profile', protect, getCompanyProfile);
+router.get('/profile/:id', protect, getCompanyProfile);
 router.post('/logout', logOutCompany);
 router.post('/addjobprofile', protect, addJobProfile);
 router.get('/viewjobprofile', protect, viewJobProfile);

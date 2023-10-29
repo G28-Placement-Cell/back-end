@@ -138,11 +138,8 @@ const log_out_student = asyncHandler(async (req, res) => {
 
 
 const get_student_profile = asyncHandler(async (req, res) => {
-    const stu = await student.findOne(req._id);
-    // const stu = {
-    //     name: req.student.name,
-    //     student_id: req.student.student_id
-    // }
+    console.log(req.student);
+    const stu = await student.findOne(req.student._id);
     res.status(201).json({
         stu
     })

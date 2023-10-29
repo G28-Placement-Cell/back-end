@@ -40,28 +40,27 @@ const registerCompany = async (req, res) => {
             contact_number,
             address,
             email,
-            password: hashedPassword,
+            password: password,
             website,
         });
 
         if (reg_company) {
-            const token = generateToken(reg_company._id);
-            return sendSuccessResponse(res, 201, {
+            const tok = await generateToken(reg_company._id);
+            console.log(tok);
+            res.status(201).json({
                 _id: reg_company._id,
                 name: reg_company.name,
-                hr_name: reg_company.hr_name,
-                contact_number: reg_company.contact_number,
-                address: reg_company.address,
-                email: reg_company.email,
-                password: reg_company.password,
-                website: reg_company.website,
-                token,
+                token: tok,
             });
         } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
+            res.status(400).json({
+                message: "Invalid user data"
+            });
         }
     } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
+        res.status(500).json({
+            message: "Server Error"
+        });
     }
 };
 
@@ -75,23 +74,21 @@ const loginCompany = async (req, res) => {
         const companyExists = await Company.findOne({ email });
 
         if (companyExists && (await bcrypt.compare(password, companyExists.password))) {
-            const token = generateToken(companyExists._id);
-            return sendSuccessResponse(res, 200, {
+            const tok = await generateToken(companyExists._id);
+            res.status(201).json({
                 _id: companyExists._id,
-                name: companyExists.name,
-                hr_name: companyExists.hr_name,
-                contact_number: companyExists.contact_number,
-                address: companyExists.address,
                 email: companyExists.email,
-                password: companyExists.password,
-                website: companyExists.website,
-                token,
+                token: tok,
             });
         } else {
-            return sendErrorResponse(res, 401, 'Invalid email or password');
+            res.status(400).json({
+                message: "Invalid user data"
+            });
         }
     } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
+        res.status(500).json({
+            message: "Server Error"
+        });
     }
 };
 
@@ -99,17 +96,31 @@ const loginCompany = async (req, res) => {
 //access private
 //route api/company/profile
 
+// const Company = require('../models/companyModel'); // Import your Company model
+
 const getCompanyProfile = async (req, res) => {
     try {
-        const company = {
-            name: req.company.name,
-            email: req.company.email,
-        };
-        return sendSuccessResponse(res, 201, { company });
+        const companyId = req.params.id;
+        const company = await Company.findById(companyId);
+        if (!company) {
+            res.status(404).json({
+                message: 'Company not found',
+            });
+        }
+        res.status(200).json({
+            message: 'Company found',
+            company,
+        });
     } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
+        console.error(error);
+        res.status(500).json({
+            message: 'Server Error',
+        });
     }
 };
+
+// module.exports = getCompanyProfile;
+
 
 //access private
 //route api/company/logout
