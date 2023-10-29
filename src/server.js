@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const { errorHandler, notfound } = require('./middleware/errormiddleware');
 const dotenv = require('dotenv');
-dotenv.config();
+console.log(dotenv.config());
+
 
 const cors = require('cors');
 
