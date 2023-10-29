@@ -3,9 +3,7 @@ const jwt = require('jsonwebtoken');
 const company = require('../models/companyModel');
 
 const protect = asyncHandler(async (req, res, next) => {
-    let token;
-    token = localStorage.getItem('token');
-    console.log(token);
+    const token = req.headers.authorization.split(' ')[1];
     if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
