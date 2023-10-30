@@ -2,11 +2,16 @@ const { validationResult, check } = require('express-validator');
 
 // Middleware to validate job profile data when creating or updating
 const validateJobProfile = [
-    check('name').not().isEmpty().withMessage('Name is required'),
-    check('description').not().isEmpty().withMessage('Description is required'),
-    check('salary').isNumeric().withMessage('Salary must be a number'),
-    check('bond').isNumeric().withMessage('Bond must be a number'),
+    check('company_name').not().isEmpty().withMessage('Company name is required'),
+    check('offer_type').not().isEmpty().withMessage('Offer type is required'),
     check('location').not().isEmpty().withMessage('Location is required'),
+    check('open_for').not().isEmpty().withMessage('Open for is required'),
+    check('cpi_criteria').not().isEmpty().withMessage('CPI criteria is required'),
+    check('ctc').not().isEmpty().withMessage('CTC is required'),
+    check('registration_start_date').not().isEmpty().withMessage('Registration start date is required'),
+    check('registration_end_date').not().isEmpty().withMessage('Registration end date is required'),
+    check('job_description').not().isEmpty().withMessage('Job description is required'),
+    // check('job_description_file').not().isEmpty().withMessage('Job description file is required'),
 
     (req, res, next) => {
         const errors = validationResult(req);

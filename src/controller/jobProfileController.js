@@ -6,39 +6,62 @@ const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
 // @route   POST /api/jobProfiles
 // @access  Private
 const createJobProfile = asyncHandler(async (req, res) => {
-    const { name, description, salary, bond, location } = req.body;
-    const company = req.company._id;
+    try {
+        const {
+            company,
+            company_name,
+            offer_type,
+            location,
+            open_for,
+            cpi_criteria,
+            ctc,
+            registration_start_date,
+            registration_end_date,
+            job_description,
+            job_description_file,
+        } = req.body;
 
-    const jobProfile = await JobProfile.create({
-        name,
-        description,
-        salary,
-        bond,
-        location,
-        company,
-    });
+        const jobProfile = new JobProfile({
+            company,
+            company_name,
+            offer_type,
+            location,
+            open_for,
+            cpi_criteria,
+            ctc,
+            registration_start_date,
+            registration_end_date,
+            job_description,
+            job_description_file,
+        });
 
-    if (jobProfile) {
-        sendSuccessResponse(res, 201, jobProfile);
-    } else {
-        sendErrorResponse(res, 400, 'Invalid user data');
+        const createdJobProfile = await jobProfile.save();
+        res.status(201).json(createdJobProfile);
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ message: 'Internal server error' }); // You can customize the error message and status code
     }
 });
+
+
+
+
 
 // @desc    Get all job profiles for a company
 // @route   GET /api/jobProfiles
 // @access  Private
 const getAllJobProfiles = asyncHandler(async (req, res) => {
-    const company = req.company._id;
+    const company = req.body.company;
 
     const jobProfiles = await JobProfile.find({ company });
 
-    if (jobProfiles) {
+    if (jobProfiles.length > 0) {
         sendSuccessResponse(res, 200, jobProfiles);
     } else {
         sendErrorResponse(res, 404, 'No job profiles found');
     }
 });
+
 
 // @desc    Get a job profile by ID
 // @route   GET /api/jobProfiles/:id
@@ -47,9 +70,9 @@ const getJobProfileById = asyncHandler(async (req, res) => {
     const jobProfile = await JobProfile.findById(req.params.id);
 
     if (jobProfile) {
-        sendSuccessResponse(res, 200, jobProfile);
+        res.status(200).json(jobProfile);
     } else {
-        sendErrorResponse(res, 404, 'Job profile not found');
+        res.status(404).json({ message: 'Job profile not found' });
     }
 });
 
@@ -57,22 +80,38 @@ const getJobProfileById = asyncHandler(async (req, res) => {
 // @route   PUT /api/jobProfiles/:id
 // @access  Private
 const updateJobProfile = asyncHandler(async (req, res) => {
-    const { name, description, salary, bond, location } = req.body;
+    const { 
+        company_name,
+        offer_type,
+        location,
+        open_for,
+        cpi_criteria,
+        ctc,
+        registration_start_date,
+        registration_end_date,
+        job_description,
+        job_description_file,
+     } = req.body;
     const jobProfileId = req.params.id;
 
     const jobProfile = await JobProfile.findById(jobProfileId);
 
     if (jobProfile) {
-        jobProfile.name = name;
-        jobProfile.description = description;
-        jobProfile.salary = salary;
-        jobProfile.bond = bond;
+        jobProfile.company_name = company_name;
+        jobProfile.offer_type = offer_type;
         jobProfile.location = location;
+        jobProfile.open_for = open_for;
+        jobProfile.cpi_criteria = cpi_criteria;
+        jobProfile.ctc = ctc;
+        jobProfile.registration_start_date = registration_start_date;
+        jobProfile.registration_end_date = registration_end_date;
+        jobProfile.job_description = job_description;
+        jobProfile.job_description_file = job_description_file;
 
         const updatedJobProfile = await jobProfile.save();
-        sendSuccessResponse(res, 200, updatedJobProfile);
+        res.status(200).json(updatedJobProfile);
     } else {
-        sendErrorResponse(res, 404, 'Job profile not found');
+        res.status(404).json({ message: 'Job profile not found' });
     }
 });
 
@@ -85,10 +124,10 @@ const deleteJobProfile = asyncHandler(async (req, res) => {
     const jobProfile = await JobProfile.findById(jobProfileId);
 
     if (jobProfile) {
-        await jobProfile.remove();
-        sendSuccessResponse(res, 200, { message: 'Job profile deleted' });
+        await jobProfile.deleteOne();
+        res.status(200).json({ message: 'Job profile removed' });
     } else {
-        sendErrorResponse(res, 404, 'Job profile not found');
+        res.status(404).json({ message: 'Job profile not found' });
     }
 });
 
