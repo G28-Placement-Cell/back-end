@@ -24,6 +24,7 @@ const register_student = asyncHandler(async (req, res) => {
     // console.log("ok");
     // const { email, alt_email } = req.body;
     // console.log(req.body);
+    // console.log(req.body);
 
     const studentExists = await student.findOne({
         student_id: student_id
@@ -71,6 +72,7 @@ const register_student = asyncHandler(async (req, res) => {
             main: phone,
             alt: alt_phone
         },
+        // resume: !req.file ? null : req.file.url,
     })
     if (!reg_student) {
         res.status(400)
