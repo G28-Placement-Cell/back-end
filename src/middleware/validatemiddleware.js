@@ -32,7 +32,6 @@ const validateAnnouncement = [
     check('sent_to').not().isEmpty().withMessage('Sent to is required'),
     check('is_company_announcement').not().isEmpty().withMessage('Is company announcement is required'),
     check('company').not().isEmpty().withMessage('Company is required'),
-    check('job_profile').not().isEmpty().withMessage('Job profile is required'),
 
     (req, res, next) => {
         const errors = validationResult(req);

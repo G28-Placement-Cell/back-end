@@ -38,7 +38,7 @@ const createJobProfile = asyncHandler(async (req, res) => {
         const createdJobProfile = await jobProfile.save();
         res.status(201).json(createdJobProfile);
     } catch (error) {
-        console.error(error); // Log the error for debugging
+        // console.error(error); // Log the error for debugging
         res.status(500).json({ message: 'Internal server error' }); // You can customize the error message and status code
     }
 });

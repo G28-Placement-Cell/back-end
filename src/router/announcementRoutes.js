@@ -10,7 +10,7 @@ const {
 const protect = require('../middleware/authmiddleware');
 const { validateAnnouncement } = require('../middleware/validatemiddleware.js');
 
-router.route('/').post(protect, validateAnnouncement, createAnnouncement).get(protect, getAllAnnouncements);
-router.route('/:id').get(protect, getAnnouncementById).put(protect, validateAnnouncement, updateAnnouncement).delete(protect, deleteAnnouncement);
+router.route('/').post(validateAnnouncement, createAnnouncement).get(getAllAnnouncements);
+router.route('/:id').get(getAnnouncementById).put(validateAnnouncement, updateAnnouncement).delete(deleteAnnouncement);
 
 module.exports = router;

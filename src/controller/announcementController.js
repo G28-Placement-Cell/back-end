@@ -29,26 +29,27 @@ const createAnnouncement = asyncHandler(async (req, res) => {
     });
 
     if (announcement) {
-        sendSuccessResponse(res, 201, announcement);
+        // Include the _id in the response
+        res.status(201).json(announcement);
     } else {
-        sendErrorResponse(res, 400, 'Invalid user data');
+        res.status(400).json({ message: 'Invalid announcement data' });
     }
 });
+
 
 // @desc    Get all announcements for a company
 // @route   GET /api/announcements
 // @access  Private
 const getAllAnnouncements = asyncHandler(async (req, res) => {
-    const company = req.company._id;
-
-    const announcements = await Announcement.find({ company });
+    const announcements = await Announcement.find();
 
     if (announcements) {
-        sendSuccessResponse(res, 200, announcements);
+        res.status(200).json(announcements);
     } else {
-        sendErrorResponse(res, 404, 'No announcements found');
+        res.status(404).json({ message: 'Announcements not found' });
     }
 });
+
 
 // @desc    Get an announcement by ID
 // @route   GET /api/announcements/:id
@@ -57,9 +58,9 @@ const getAnnouncementById = asyncHandler(async (req, res) => {
     const announcement = await Announcement.findById(req.params.id);
 
     if (announcement) {
-        sendSuccessResponse(res, 200, announcement);
+        res.status(200).json(announcement);
     } else {
-        sendErrorResponse(res, 404, 'Announcement not found');
+        res.status(404).json({ message: 'Announcement not found' });
     }
 });
 
@@ -107,7 +108,7 @@ const deleteAnnouncement = asyncHandler(async (req, res) => {
     const announcement = await Announcement.findById(announcementId);
 
     if (announcement) {
-        await announcement.remove();
+        await announcement.deleteOne();
         sendSuccessResponse(res, 200, { message: 'Announcement deleted' });
     } else {
         sendErrorResponse(res, 404, 'Announcement not found');
