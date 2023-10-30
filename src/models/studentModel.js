@@ -113,6 +113,7 @@ const studentSchema = new mongoose.Schema({
     },
     resume: {
         type: String,
+        
         // required: [true, "Please upload a resume"],
     },
     profile_pic: {
