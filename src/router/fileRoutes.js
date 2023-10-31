@@ -2,6 +2,7 @@ const express = require('express');
 const fileRouter = express.Router();
 const multer = require('multer');
 const FileController = require('../controller/fileController');
+const protect = require('../middleware/authmiddleware');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -17,6 +18,7 @@ const upload = multer({ storage });
 
 fileRouter.get('/:id', FileController.get);
 
-fileRouter.post('/', upload.single('file'), FileController.post);
+fileRouter.post('/', protect, upload.single('file'), FileController.post);
+
 
 module.exports = fileRouter;
