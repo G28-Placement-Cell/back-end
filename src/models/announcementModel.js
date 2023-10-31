@@ -17,10 +17,12 @@ const announcementSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    sent_to: {
-        type: String,
-        required: true,
-    },
+    sent_to:[
+        {
+            type: String,
+            required: true,
+        }
+    ],
     is_company_announcement: {
         type: Boolean,
         required: true,
@@ -28,10 +30,6 @@ const announcementSchema = new mongoose.Schema({
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
-    },
-    job_profile: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'jobProfile',
     },
 });
 

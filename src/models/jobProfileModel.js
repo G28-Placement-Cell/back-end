@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const jobProfileSchema = new mongoose.Schema({
+    company: {
+        type: String,
+        required: [true, "Please enter a company id"],
+    },
     company_name: {
         type: String,
         required: [true, "Please enter a company id"],
