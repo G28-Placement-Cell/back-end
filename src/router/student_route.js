@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { auth_student, register_student, log_out_student, login_student, get_student_profile, update_student_profile } = require('../controller/student_control');
+const { auth_student, register_student, log_out_student, login_student, get_student_profile, update_student_profile, change_password } = require('../controller/student_control');
 const protect = require('../middleware/authmiddleware');
 const { upload, gridFSMiddleware } = require('../middleware/fileMiddleware');
 router.post('/auth', auth_student);
@@ -10,5 +10,6 @@ router.post('/logout', log_out_student);
 router.post('/login', login_student);
 router.get('/profile', protect, get_student_profile);
 router.put('/profile', protect, update_student_profile);
+router.post('/change_password', protect, change_password);
 
 module.exports = router;

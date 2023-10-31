@@ -140,11 +140,48 @@ const log_out_student = asyncHandler(async (req, res) => {
 
 
 const get_student_profile = asyncHandler(async (req, res) => {
-    console.log(req.student);
+    // console.log(req.student);
     const stu = await student.findOne(req.student._id);
     res.status(201).json({
         stu
     })
+})
+
+//access private
+//route api/student/change_password
+
+const change_password = asyncHandler(async (req, res) => {
+    // console.log(req.student);
+    // console.log(req.body);
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    const stu = await student.findById(req.student._id);
+
+    let isMatch = false;
+    if (stu) {
+        isMatch = await bcrypt.compare(currentPassword, stu.password);
+    }
+    if (!stu || !isMatch) {
+        res.status(400)
+        throw new Error('Enter valid current password')
+    }
+    if (newPassword !== confirmPassword) {
+        res.status(400)
+        throw new Error('New password and confirm password do not match')
+    }
+    const salt = await bcrypt.genSalt(11);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    let check = await bcrypt.compare(newPassword, stu.password);
+    if (check) {
+        res.status(400)
+        throw new Error('New password cannot be same as current password')
+    }
+    const updatedStudent = await student.findByIdAndUpdate(req.student._id, { password: hashedPassword }, { new: true });
+    res.status(201).json({
+        message: "password changed",
+        updatedStudent
+    })
+
 })
 
 const update_student_profile = asyncHandler(async (req, res) => {
@@ -179,5 +216,6 @@ module.exports = {
     log_out_student,
     login_student,
     get_student_profile,
-    update_student_profile
+    update_student_profile,
+    change_password
 };
