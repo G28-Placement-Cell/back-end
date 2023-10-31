@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const student = require('../models/studentModel');
+const jobprofile = require('../models/jobProfileModel');
 const bcrypt = require('bcryptjs');
 
 const generateToken = require('../utils/generatejwt')
@@ -210,6 +211,14 @@ const update_student_profile = asyncHandler(async (req, res) => {
 
 })
 
+const get_all_job_profiles = asyncHandler(async (req, res) => {
+    const job = await jobprofile.find({});
+    res.status(201).json({
+        job
+    })
+
+})
+
 module.exports = {
     auth_student,
     register_student,
@@ -217,5 +226,6 @@ module.exports = {
     login_student,
     get_student_profile,
     update_student_profile,
+    get_all_job_profiles,
     change_password
 };
