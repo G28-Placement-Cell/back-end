@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const companySchema = new mongoose.Schema({
-    name: {
+    companyname: {
         type: String,
         required: [true, "Please enter a name"],
     },
-    hr_name: {
+    hrname: {
         type: String,
         required: [true, "Please enter a hr name"],
     },
-    contact_number: {
+    contact: {
         type: String,
         required: [true, "Please enter a contact number"],
     },
@@ -30,7 +30,7 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter a website"],
     },
-    job_profiles: [
+    jobprofiles: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'jobProfile'

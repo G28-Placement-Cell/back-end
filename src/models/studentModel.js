@@ -135,7 +135,13 @@ const studentSchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false,
-    }
+    },
+    jobprofiles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'jobProfile'
+        }
+    ],
 }, {
     timestamp: true
 })

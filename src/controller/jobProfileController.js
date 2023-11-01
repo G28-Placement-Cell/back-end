@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const JobProfile = require('../models/jobProfileModel');
+const Student = require('../models/studentModel');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
 
 // @desc    Create a new job profile
@@ -51,9 +52,9 @@ const createJobProfile = asyncHandler(async (req, res) => {
 // @route   GET /api/jobProfiles
 // @access  Private
 const getAllJobProfiles = asyncHandler(async (req, res) => {
-    const company = req.body.company;
+    // const company = req.body.company;
 
-    const jobProfiles = await JobProfile.find({ company });
+    const jobProfiles = await JobProfile.find({});
 
     if (jobProfiles.length > 0) {
         sendSuccessResponse(res, 200, jobProfiles);
@@ -131,10 +132,70 @@ const deleteJobProfile = asyncHandler(async (req, res) => {
     }
 });
 
+const registerToJobprofile = asyncHandler(async (req, res) => {
+    const jobprofile_id = req.params.id;
+    const student_id = req.params.stuId;
+    const jobprofileExists = await JobProfile.findById(jobprofile_id);
+    const studentExists = await Student.findById(student_id);
+    if (!jobprofileExists) {
+        res.status(400)
+        throw new Error('Job profile does not exist')
+    }
+    if (!studentExists) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    const check = jobprofileExists.applicants.includes(student_id);
+    if (check) {
+        res.status(400)
+        throw new Error('Student already registered')
+    }
+    jobprofileExists.applicants.push(student_id);
+    studentExists.jobprofiles.push(jobprofile_id);
+    const updatedJobProfile = await jobprofileExists.save();
+    const updatedStudent = await studentExists.save();
+    res.status(201).json({
+        message: "registered",
+        updatedJobProfile,
+        updatedStudent
+    })
+})
+
+const deregisterFromJobprofile = asyncHandler(async (req, res) => {
+    const jobprofile_id = req.params.id;
+    const student_id = req.params.stuId;
+    const jobprofileExists = await JobProfile.findById(jobprofile_id);
+    const studentExists = await Student.findById(student_id);
+    if (!jobprofileExists) {
+        res.status(400)
+        throw new Error('Job profile does not exist')
+    }
+    if (!studentExists) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    const check = jobprofileExists.applicants.includes(student_id);
+    if (!check) {
+        res.status(400)
+        throw new Error('Student not registered')
+    }
+    jobprofileExists.applicants.pull(student_id);
+    studentExists.jobprofiles.pull(jobprofile_id);
+    const updatedJobProfile = await jobprofileExists.save();
+    const updatedStudent = await studentExists.save();
+    res.status(201).json({
+        message: "deregistered",
+        updatedJobProfile,
+        updatedStudent
+    })
+})
+
 module.exports = {
     createJobProfile,
     getAllJobProfiles,
     getJobProfileById,
     updateJobProfile,
     deleteJobProfile,
+    registerToJobprofile,
+    deregisterFromJobprofile,
 };

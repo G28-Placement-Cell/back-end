@@ -82,6 +82,7 @@ const register_student = asyncHandler(async (req, res) => {
     const tok = await generateToken(res, reg_student._id);
     res.status(201).json({
         message: "register",
+        _id: reg_student._id,
         // name: reg_student.name,
         // email: reg_student.email.main
         student_id: reg_student.student_id,
@@ -112,6 +113,7 @@ const login_student = asyncHandler(async (req, res) => {
     console.log("hurray")
     res.status(201).json({
         message: "login",
+        _id: studentExists._id,
         // name: studentExists.name,
         // email: studentExists.email.main,
         student_id: studentExists.student_id,

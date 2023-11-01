@@ -23,8 +23,8 @@ const authCompany = asyncHandler(async (req, res) => {
 //route api/company/register
 
 const registerCompany = async (req, res) => {
-    const { name, hr_name, contact_number, address, email, password, website } = req.body;
-
+    const { companyname, hrname, contact, address, email, password, website } = req.body;
+    console.log(req.body);
     try {
         const companyExists = await Company.findOne({ email });
 
@@ -35,13 +35,13 @@ const registerCompany = async (req, res) => {
         const salt = await bcrypt.genSalt(11);
         const hashedPassword = await bcrypt.hash(password, salt);
         const reg_company = await Company.create({
-            name,
-            hr_name,
-            contact_number,
+            companyname,
+            hrname,
+            contact,
             address,
             email,
-            password: password,
-            website,
+            password,
+            website
         });
 
         if (reg_company) {
@@ -49,7 +49,8 @@ const registerCompany = async (req, res) => {
             console.log(tok);
             res.status(201).json({
                 _id: reg_company._id,
-                name: reg_company.name,
+                companyname: reg_company.companyname,
+                hrname: reg_company.hrname,
                 token: tok,
             });
         } else {
@@ -67,30 +68,32 @@ const registerCompany = async (req, res) => {
 //access public
 //route api/company/login
 
-const loginCompany = async (req, res) => {
+const loginCompany = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+    const companyExists = await Company.findOne({ email });
 
-    try {
-        const companyExists = await Company.findOne({ email });
-
-        if (companyExists && (await bcrypt.compare(password, companyExists.password))) {
-            const tok = await generateToken(companyExists._id);
-            res.status(201).json({
-                _id: companyExists._id,
-                email: companyExists.email,
-                token: tok,
-            });
-        } else {
-            res.status(400).json({
-                message: "Invalid user data"
-            });
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: "Server Error"
-        });
+    let isMatch = false;
+    if (companyExists) {
+        isMatch = await bcrypt.compare(password, companyExists.password);
     }
-};
+
+    if (!companyExists || !isMatch) {
+        res.status(400);
+        throw new Error('Invalid credentials');
+    }
+
+    const tok = await generateToken(res, companyExists._id);
+    console.log(tok);
+    console.log("hurray");
+    res.status(201).json({
+        message: "Login",
+        // You can include additional data here if needed
+        _id: companyExists._id,
+        email: companyExists.email,
+        token: tok,
+    });
+});
+
 
 
 //access private
@@ -100,16 +103,9 @@ const loginCompany = async (req, res) => {
 
 const getCompanyProfile = async (req, res) => {
     try {
-        const companyId = req.params.id;
-        const company = await Company.findById(companyId);
-        if (!company) {
-            res.status(404).json({
-                message: 'Company not found',
-            });
-        }
+        const comp = await Company.findById(req.company._id);
         res.status(200).json({
-            message: 'Company found',
-            company,
+            comp
         });
     } catch (error) {
         console.error(error);
