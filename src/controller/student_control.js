@@ -213,6 +213,49 @@ const update_student_profile = asyncHandler(async (req, res) => {
 
 })
 
+//route api/student/reject
+
+const reject = asyncHandler(async (req, res) => {
+    const { student_id } = req.body;
+    const studentExist = await student.findOne({
+        student_id: student_id
+    });
+    if (!studentExist) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    const response = student.findByIdAndDelete(studentExist._id);
+    res.status(201).json({
+        message: "rejected",
+        response
+    })
+})
+
+//route api/student/verify
+
+const verify = asyncHandler(async (req, res) => {
+    const { student_id } = req.body;
+    const studentExist = await student.findOne({
+        student_id: student_id
+    });
+    if (!studentExist) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    const response = student.findByIdAndUpdate(studentExist._id, { verified: true }, { new: true });
+    res.status(201).json({
+        message: "verified",
+        response
+    })
+})
+
+const getpenstudent = asyncHandler(async (req, res) => {
+    const penstudent = await student.find({ verified: false })
+    res.status(201).json({
+        penstudent
+    })
+})
+
 const get_all_job_profiles = asyncHandler(async (req, res) => {
     const job = await jobprofile.find({});
     res.status(201).json({
@@ -229,5 +272,9 @@ module.exports = {
     get_student_profile,
     update_student_profile,
     get_all_job_profiles,
-    change_password
+    change_password,
+    reject,
+    verify,
+    getpenstudent
+
 };
