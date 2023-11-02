@@ -21,13 +21,21 @@ const jobProfileSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter a open for"],
     },
+    company_type: {
+        type: String,
+        required: [true, "Please enter a company type"],
+    },
     cpi_criteria: {
         type: Number,
         required: [true, "Please enter a cpi criteria"],
     },
     ctc: {
-        type: String,
+        type: Number,
         required: [true, "Please enter a ctc"],
+    },
+    stipend: {
+        type: Number,
+        required: [true, "Please enter a stipend"],
     },
     registration_start_date: {
         type: Date,
