@@ -224,7 +224,7 @@ const reject = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Student does not exist')
     }
-    const response = student.findByIdAndDelete(studentExist._id);
+    const response = await student.findByIdAndDelete(studentExist._id);
     res.status(201).json({
         message: "rejected",
         response
@@ -242,10 +242,17 @@ const verify = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Student does not exist')
     }
-    const response = student.findByIdAndUpdate(studentExist._id, { verified: true }, { new: true });
+    const response = await student.findByIdAndUpdate(studentExist._id, { verified: true }, { new: true });
     res.status(201).json({
         message: "verified",
         response
+    })
+})
+
+const getregstudent = asyncHandler(async (req, res) => {
+    const regstudent = await student.find({ verified: true })
+    res.status(201).json({
+        regstudent
     })
 })
 
@@ -275,6 +282,7 @@ module.exports = {
     change_password,
     reject,
     verify,
+    getregstudent,
     getpenstudent
 
 };
