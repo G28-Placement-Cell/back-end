@@ -14,12 +14,15 @@ const createJobProfile = asyncHandler(async (req, res) => {
             offer_type,
             location,
             open_for,
+            company_type,
             cpi_criteria,
             ctc,
+            stipend,
             registration_start_date,
             registration_end_date,
             job_description,
             job_description_file,
+
         } = req.body;
 
         const jobProfile = new JobProfile({
@@ -28,8 +31,10 @@ const createJobProfile = asyncHandler(async (req, res) => {
             offer_type,
             location,
             open_for,
+            company_type,
             cpi_criteria,
             ctc,
+            stipend,
             registration_start_date,
             registration_end_date,
             job_description,
