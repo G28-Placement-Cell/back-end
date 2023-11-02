@@ -57,7 +57,7 @@ const getAllJobProfiles = asyncHandler(async (req, res) => {
     const jobProfiles = await JobProfile.find({});
 
     if (jobProfiles.length > 0) {
-        sendSuccessResponse(res, 200, jobProfiles);
+        sendSuccessResponse(res, 200, {jobProfiles});
     } else {
         sendErrorResponse(res, 404, 'No job profiles found');
     }
@@ -190,6 +190,64 @@ const deregisterFromJobprofile = asyncHandler(async (req, res) => {
     })
 })
 
+const addToShortlisted = asyncHandler(async (req, res) => {
+    const jobprofile_id = req.params.id;
+    const student_id = req.params.stuId;
+    const jobprofileExists = await JobProfile.findById(jobprofile_id);
+    const studentExists = await Student.findById(student_id);
+    if (!jobprofileExists) {
+        res.status(400)
+        throw new Error('Job profile does not exist')
+    }
+    if (!studentExists) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    const check = jobprofileExists.selected.includes(student_id);
+    if (check) {
+        res.status(400)
+        throw new Error('Student already shortlisted')
+    }
+    jobprofileExists.selected.push(student_id);
+    studentExists.shorlisted.push(jobprofile_id);
+    const updatedJobProfile = await jobprofileExists.save();
+    const updatedStudent = await studentExists.save();
+    res.status(201).json({
+        message: "shortlisted",
+        updatedJobProfile,
+        updatedStudent
+    })
+})
+
+const removeFromShortlisted = asyncHandler(async (req, res) => {
+    const jobprofile_id = req.params.id;
+    const student_id = req.params.stuId;
+    const jobprofileExists = await JobProfile.findById(jobprofile_id);
+    const studentExists = await Student.findById(student_id);
+    if (!jobprofileExists) {
+        res.status(400)
+        throw new Error('Job profile does not exist')
+    }
+    if (!studentExists) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    const check = jobprofileExists.selected.includes(student_id);
+    if (!check) {
+        res.status(400)
+        throw new Error('Student not shortlisted')
+    }
+    jobprofileExists.selected.pull(student_id);
+    studentExists.shorlisted.pull(jobprofile_id);
+    const updatedJobProfile = await jobprofileExists.save();
+    const updatedStudent = await studentExists.save();
+    res.status(201).json({
+        message: "removed from shortlisted",
+        updatedJobProfile,
+        updatedStudent
+    })
+})
+
 module.exports = {
     createJobProfile,
     getAllJobProfiles,
@@ -198,4 +256,6 @@ module.exports = {
     deleteJobProfile,
     registerToJobprofile,
     deregisterFromJobprofile,
+    addToShortlisted,
+    removeFromShortlisted
 };

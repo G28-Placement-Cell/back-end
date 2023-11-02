@@ -51,6 +51,12 @@ const jobProfileSchema = new mongoose.Schema({
             ref: 'Student'
         }
     ],
+    selected: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Student'
+        }
+    ],
 });
 
 module.exports = mongoose.model("jobProfile", jobProfileSchema);

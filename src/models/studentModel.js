@@ -142,6 +142,12 @@ const studentSchema = new mongoose.Schema({
             ref: 'jobProfile'
         }
     ],
+    shorlisted: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'jobProfile'
+        }
+    ],
 }, {
     timestamp: true
 })
