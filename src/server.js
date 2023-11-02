@@ -37,6 +37,7 @@ app.use('/api/company', require('./router/company_route'));
 app.use('/api/jobprofile', require('./router/jobProfileRoutes'));
 app.use('/api/announcements', require('./router/announcementRoutes'));
 app.use('/api/student/files', require('./router/fileRoutes'));
+app.use('/api/admin', require('./router/adminRoutes'));
 
 app.use(errorHandler);
 app.use(notfound);

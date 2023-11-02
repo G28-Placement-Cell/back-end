@@ -13,10 +13,18 @@ const FileController = {
         // sleep(5000);
         const stu = await student.findByIdAndUpdate(req.student._id, { resume: id }, { new: true });
         // console.log(stu);
-        res.json({
-            message: 'File uploaded successfully',
-            fileId: id,
-        });
+        if (stu) {
+            res.json({
+                message: 'File uploaded successfully',
+                fileId: id,
+            });
+        }
+        else {
+            res.json({
+                message: 'File not uploaded',
+                fileId: id,
+            });
+        }
     }
 };
 
