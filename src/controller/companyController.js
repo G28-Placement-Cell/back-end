@@ -137,271 +137,321 @@ const logOutCompany = (req, res) => {
 //access private
 //route api/company/addjobprofile
 
-const addJobProfile = async (req, res) => {
-    try {
-        const { name, description, salary, bond, location } = req.body;
-        const jobProfile = await JobProfile.create({
-            name,
-            description,
-            salary,
-            bond,
-            location,
-            company: req.company._id,
+// const addJobProfile = async (req, res) => {
+//     try {
+//         const { name, description, salary, bond, location } = req.body;
+//         const jobProfile = await JobProfile.create({
+//             name,
+//             description,
+//             salary,
+//             bond,
+//             location,
+//             company: req.company._id,
+//         });
+
+//         if (jobProfile) {
+//             return sendSuccessResponse(res, 201, jobProfile);
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private
+// //route api/company/viewjobprofile
+
+// const viewJobProfile = async (req, res) => {
+//     try {
+//         const jobProfile = await JobProfile.find({ company: req.company._id });
+//         if (jobProfile) {
+//             return sendSuccessResponse(res, 200, { job_profile: jobProfile });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+
+// //access private
+// //route api/company/viewjobprofile/:id
+
+// const viewJobProfileById = async (req, res) => {
+//     try {
+//         const jobProfile = await JobProfile.findById(req.params.id);
+//         if (jobProfile) {
+//             return sendSuccessResponse(res, 200, { job_profile: jobProfile });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private
+// //route api/company/viewjobprofile/:id
+
+// const deleteJobProfileById = async (req, res) => {
+//     try {
+//         const jobProfile = await JobProfile.findById(req.params.id);
+//         if (jobProfile) {
+//             await jobProfile.remove();
+//             return sendSuccessResponse(res, 200, { message: 'Job profile deleted' });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private
+// //route api/company/viewjobprofile/:id
+
+// const updateJobProfileById = async (req, res) => {
+//     try {
+//         const { name, description, salary, bond, location } = req.body;
+//         const jobProfile = await JobProfile.findById(req.params.id);
+
+//         if (jobProfile) {
+//             jobProfile.name = name;
+//             jobProfile.description = description;
+//             jobProfile.salary = salary;
+//             jobProfile.bond = bond;
+//             jobProfile.location = location;
+
+//             const updatedJobProfile = await jobProfile.save();
+//             return sendSuccessResponse(res, 201, { updatedJobProfile });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+
+// //access private
+// //route api/company/viewjobprofile/:id
+
+// const applyJobProfileById = async (req, res) => {
+//     try {
+//         const jobProfile = await JobProfile.findById(req.params.id);
+
+//         if (jobProfile) {
+//             jobProfile.applicants.push(req.student._id);
+//             const updatedJobProfile = await jobProfile.save();
+//             return sendSuccessResponse(res, 201, { updatedJobProfile });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+
+// //access private
+// //route api/company/viewjobprofile/:id
+
+// const viewApplicantsById = async (req, res) => {
+//     try {
+//         const jobProfile = await JobProfile.findById(req.params.id).populate('applicants');
+//         if (jobProfile) {
+//             return sendSuccessResponse(res, 200, { jobProfile });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+
+// // add announcement
+// //access private
+// //route api/company/announcement
+
+// const addAnnouncement = async (req, res) => {
+//     try {
+//         const { title, description, date, file, sent_to, is_company_announcement, company, job_profile } = req.body;
+
+//         const announcement = await Announcement.create({
+//             title, description, date, file, sent_to, is_company_announcement, company, job_profile
+//         });
+
+//         if (announcement) {
+//             return sendSuccessResponse(res, 201, {
+//                 _id: announcement._id,
+//                 title: announcement.title,
+//                 description: announcement.description,
+//                 date: announcement.date,
+//                 file: announcement.file,
+//                 sent_to: announcement.sent_to,
+//                 is_company_announcement: announcement.is_company_announcement,
+//                 company: announcement.company,
+//                 job_profile: announcement.job_profile
+//             });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+// //access private
+// //route api/company/announcement
+
+// const viewAnnouncement = async (req, res) => {
+//     try {
+//         const announcements = await Announcement.find({ company: req.company._id });
+
+//         if (announcements) {
+//             return sendSuccessResponse(res, 200, { announcements });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private
+// //route api/company/announcement/:id
+
+// const viewAnnouncementById = async (req, res) => {
+//     try {
+//         const announcement = await Announcement.findById(req.params.id);
+
+//         if (announcement) {
+//             return sendSuccessResponse(res, 201, { announcement });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private
+// //route api/company/announcement/:id
+
+// const deleteAnnouncementById = async (req, res) => {
+//     try {
+//         const announcement = await Announcement.findById(req.params.id);
+
+//         if (announcement) {
+//             await announcement.remove();
+//             return sendSuccessResponse(res, 201, { message: 'Deleted' });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private
+// //route api/company/announcement/:id
+
+// const updateAnnouncementById = async (req, res) => {
+//     const { title, description, date, file, sent_to, is_company_announcement, company, job_profile } = req.body;
+//     const announcementId = req.params.id;
+
+//     try {
+//         const announcement = await Announcement.findById(announcementId);
+
+//         if (announcement) {
+//             announcement.title = title;
+//             announcement.description = description;
+//             announcement.date = date;
+//             announcement.file = file;
+//             announcement.sent_to = sent_to;
+//             announcement.is_company_announcement = is_company_announcement;
+//             announcement.company = company;
+//             announcement.job_profile = job_profile;
+
+//             const updatedAnnouncement = await announcement.save();
+
+//             return sendSuccessResponse(res, 201, { updatedAnnouncement });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+// //access private    
+// //route api/company/announcement/:id
+
+// const viewStudentsByJobProfileId = async (req, res) => {
+//     try {
+//         const announcement = await Announcement.findById(req.params.id).populate('job_profile');
+
+//         if (announcement) {
+//             return sendSuccessResponse(res, 201, { announcement });
+//         } else {
+//             return sendErrorResponse(res, 400, 'Invalid user data');
+//         }
+//     } catch (error) {
+//         return sendErrorResponse(res, 500, 'Server Error');
+//     }
+// };
+
+const verify = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    const companyExist = await Company.findOne({ email });
+
+    if (!companyExist) {
+        res.status(404).json({
+            error: 'Company does not exist',
         });
-
-        if (jobProfile) {
-            return sendSuccessResponse(res, 201, jobProfile);
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
+        return;
     }
-};
 
-//access private
-//route api/company/viewjobprofile
+    const response = await Company.findByIdAndUpdate(companyExist._id, { isVerified: true });
 
-const viewJobProfile = async (req, res) => {
-    try {
-        const jobProfile = await JobProfile.find({ company: req.company._id });
-        if (jobProfile) {
-            return sendSuccessResponse(res, 200, { job_profile: jobProfile });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
+    res.status(200).json({
+        message: 'Company verified',
+        response,
+    });
+});
+
+
+const reject = asyncHandler(async (req, res) => {
+    const { company_id } = req.body;
+    const companyExist = await Company.findOne({
+        company_id: company_id
+    });
+    if (!companyExist) {
+        res.status(400)
+        throw new Error('Company does not exist')
     }
-};
+    const response = await Company.findByIdAndDelete(companyExist._id);
+    res.status(201).json({
+        message: "rejected",
+        response
+    })
+})
 
+const getregcompany = asyncHandler(async (req, res) => {
+    const company = await Company.find({ isVerified: true });
+    res.status(201).json({
+        company
+    })
+})
 
-//access private
-//route api/company/viewjobprofile/:id
-
-const viewJobProfileById = async (req, res) => {
-    try {
-        const jobProfile = await JobProfile.findById(req.params.id);
-        if (jobProfile) {
-            return sendSuccessResponse(res, 200, { job_profile: jobProfile });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-//access private
-//route api/company/viewjobprofile/:id
-
-const deleteJobProfileById = async (req, res) => {
-    try {
-        const jobProfile = await JobProfile.findById(req.params.id);
-        if (jobProfile) {
-            await jobProfile.remove();
-            return sendSuccessResponse(res, 200, { message: 'Job profile deleted' });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-//access private
-//route api/company/viewjobprofile/:id
-
-const updateJobProfileById = async (req, res) => {
-    try {
-        const { name, description, salary, bond, location } = req.body;
-        const jobProfile = await JobProfile.findById(req.params.id);
-
-        if (jobProfile) {
-            jobProfile.name = name;
-            jobProfile.description = description;
-            jobProfile.salary = salary;
-            jobProfile.bond = bond;
-            jobProfile.location = location;
-
-            const updatedJobProfile = await jobProfile.save();
-            return sendSuccessResponse(res, 201, { updatedJobProfile });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-
-//access private
-//route api/company/viewjobprofile/:id
-
-const applyJobProfileById = async (req, res) => {
-    try {
-        const jobProfile = await JobProfile.findById(req.params.id);
-
-        if (jobProfile) {
-            jobProfile.applicants.push(req.student._id);
-            const updatedJobProfile = await jobProfile.save();
-            return sendSuccessResponse(res, 201, { updatedJobProfile });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-
-//access private
-//route api/company/viewjobprofile/:id
-
-const viewApplicantsById = async (req, res) => {
-    try {
-        const jobProfile = await JobProfile.findById(req.params.id).populate('applicants');
-        if (jobProfile) {
-            return sendSuccessResponse(res, 200, { jobProfile });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-
-// add announcement
-//access private
-//route api/company/announcement
-
-const addAnnouncement = async (req, res) => {
-    try {
-        const { title, description, date, file, sent_to, is_company_announcement, company, job_profile } = req.body;
-
-        const announcement = await Announcement.create({
-            title, description, date, file, sent_to, is_company_announcement, company, job_profile
-        });
-
-        if (announcement) {
-            return sendSuccessResponse(res, 201, {
-                _id: announcement._id,
-                title: announcement.title,
-                description: announcement.description,
-                date: announcement.date,
-                file: announcement.file,
-                sent_to: announcement.sent_to,
-                is_company_announcement: announcement.is_company_announcement,
-                company: announcement.company,
-                job_profile: announcement.job_profile
-            });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-//access private
-//route api/company/announcement
-
-const viewAnnouncement = async (req, res) => {
-    try {
-        const announcements = await Announcement.find({ company: req.company._id });
-
-        if (announcements) {
-            return sendSuccessResponse(res, 200, { announcements });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-//access private
-//route api/company/announcement/:id
-
-const viewAnnouncementById = async (req, res) => {
-    try {
-        const announcement = await Announcement.findById(req.params.id);
-
-        if (announcement) {
-            return sendSuccessResponse(res, 201, { announcement });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-//access private
-//route api/company/announcement/:id
-
-const deleteAnnouncementById = async (req, res) => {
-    try {
-        const announcement = await Announcement.findById(req.params.id);
-
-        if (announcement) {
-            await announcement.remove();
-            return sendSuccessResponse(res, 201, { message: 'Deleted' });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-//access private
-//route api/company/announcement/:id
-
-const updateAnnouncementById = async (req, res) => {
-    const { title, description, date, file, sent_to, is_company_announcement, company, job_profile } = req.body;
-    const announcementId = req.params.id;
-
-    try {
-        const announcement = await Announcement.findById(announcementId);
-
-        if (announcement) {
-            announcement.title = title;
-            announcement.description = description;
-            announcement.date = date;
-            announcement.file = file;
-            announcement.sent_to = sent_to;
-            announcement.is_company_announcement = is_company_announcement;
-            announcement.company = company;
-            announcement.job_profile = job_profile;
-
-            const updatedAnnouncement = await announcement.save();
-
-            return sendSuccessResponse(res, 201, { updatedAnnouncement });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
-
-//access private    
-//route api/company/announcement/:id
-
-const viewStudentsByJobProfileId = async (req, res) => {
-    try {
-        const announcement = await Announcement.findById(req.params.id).populate('job_profile');
-
-        if (announcement) {
-            return sendSuccessResponse(res, 201, { announcement });
-        } else {
-            return sendErrorResponse(res, 400, 'Invalid user data');
-        }
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
-    }
-};
+const getpencompany = asyncHandler(async (req, res) => {
+    const company = await Company.find({ isVerified: false });
+    res.status(201).json({
+        company
+    })
+})
 
 module.exports = {
     authCompany,
@@ -409,18 +459,22 @@ module.exports = {
     loginCompany,
     getCompanyProfile,
     logOutCompany,
-    addJobProfile,
-    viewJobProfile,
-    viewJobProfileById,
-    deleteJobProfileById,
-    updateJobProfileById,
-    applyJobProfileById,
-    viewApplicantsById,
-    // announceResultById,
-    addAnnouncement,
-    viewAnnouncement,
-    viewAnnouncementById,
-    deleteAnnouncementById,
-    updateAnnouncementById,
-    viewStudentsByJobProfileId
+    // addJobProfile,
+    // viewJobProfile,
+    // viewJobProfileById,
+    // deleteJobProfileById,
+    // updateJobProfileById,
+    // applyJobProfileById,
+    // viewApplicantsById,
+    // // announceResultById,
+    // addAnnouncement,
+    // viewAnnouncement,
+    // viewAnnouncementById,
+    // deleteAnnouncementById,
+    // updateAnnouncementById,
+    // viewStudentsByJobProfileId
+    verify,
+    reject,
+    getregcompany,
+    getpencompany
 };

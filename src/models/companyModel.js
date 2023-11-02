@@ -30,6 +30,10 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter a website"],
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
     jobprofiles: [
         {
             type: mongoose.Schema.Types.ObjectId,

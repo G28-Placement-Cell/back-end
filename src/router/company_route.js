@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const protect = require('../middleware/authCompMiddleware');
+const protectAdmin = require('../middleware/authAdminMiddleware');
 const {
     authCompany,
     registerCompany,
@@ -21,6 +22,10 @@ const {
     // deleteAnnouncementById,
     // updateAnnouncementById,
     // viewStudentsByJobProfileId
+    verify,
+    reject,
+    getregcompany,
+    getpencompany
 } = require('../controller/companyController');
 
 router.post('/auth', authCompany);
@@ -42,5 +47,9 @@ router.post('/logout', logOutCompany);
 // router.delete('/announcement/:id', protect, deleteAnnouncementById);
 // router.put('/announcement/:id', protect, updateAnnouncementById);
 // router.get('/studentsbyjobprofileid/:id', protect, viewStudentsByJobProfileId);
+router.post('/verify', protectAdmin, verify);
+router.post('/reject', protectAdmin, reject);
+router.get('/getregcompany', protectAdmin, getregcompany);
+router.get('/getpencompany', protectAdmin, getpencompany);
 
 module.exports = router;
