@@ -115,10 +115,95 @@ const deleteAnnouncement = asyncHandler(async (req, res) => {
     }
 });
 
+const getAnnouncementsByAdminForStudent = asyncHandler(async (req, res) => {
+    const announcements = await Announcement.find({ for_students: true, is_company_announcement: false });
+
+    if (announcements) {
+        res.status(200).json(announcements);
+    } else {
+        res.status(404).json({ message: 'Announcements not found' });
+    }
+});
+
+const getAnnouncementsByAdminForCompany = asyncHandler(async (req, res) => {
+    const announcements = await Announcement.find({ for_students: false, is_company_announcement: false });
+
+    if (announcements) {
+        res.status(200).json(announcements);
+    } else {
+        res.status(404).json({ message: 'Announcements not found' });
+    }
+});
+    
+const createAnnouncementByAdminForStudent = asyncHandler(async (req, res) => {
+    const {
+        title,
+        description,
+        date,
+        is_company_announcement,
+        for_students,
+    } = req.body;
+
+    const announcement = await Announcement.create({
+        title,
+        description,
+        date,
+        is_company_announcement: false,
+        for_students: true,
+    });
+
+    if (announcement) {
+        // Include the _id in the response
+        res.status(201).json(announcement);
+    } else {
+        res.status(400).json({ message: 'Invalid announcement data' });
+    }
+});
+
+const createAnnouncementByAdminForCompany = asyncHandler(async (req, res) => {
+    const {
+        title,
+        description,
+        date,
+        is_company_announcement,
+        for_students,
+    } = req.body;
+
+    const announcement = await Announcement.create({
+        title,
+        description,
+        date,
+        is_company_announcement: false,
+        for_students: false,
+    });
+
+    if (announcement) {
+        // Include the _id in the response
+        res.status(201).json(announcement);
+    } else {
+        res.status(400).json({ message: 'Invalid announcement data' });
+    }
+});
+
+const getAnnouncementsByCompany = asyncHandler(async (req, res) => {
+    const announcements = await Announcement.find({ company: req.params.id });
+
+    if (announcements) {
+        res.status(200).json(announcements);
+    } else {
+        res.status(404).json({ message: 'Announcements not found' });
+    }
+});
+
 module.exports = {
     createAnnouncement,
     getAllAnnouncements,
     getAnnouncementById,
     updateAnnouncement,
     deleteAnnouncement,
+    getAnnouncementsByAdminForStudent,
+    getAnnouncementsByAdminForCompany,
+    createAnnouncementByAdminForStudent,
+    createAnnouncementByAdminForCompany,
+    getAnnouncementsByCompany,
 };

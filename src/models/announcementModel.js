@@ -12,18 +12,13 @@ const announcementSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
+        default: Date.now,
     },
-    file: {
-        type: String,
+    is_company_announcement: {
+        type: Boolean,
         required: true,
     },
-    sent_to:[
-        {
-            type: String,
-            required: true,
-        }
-    ],
-    is_company_announcement: {
+    for_students: {
         type: Boolean,
         required: true,
     },
@@ -31,6 +26,8 @@ const announcementSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
     },
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("Announcement", announcementSchema);
