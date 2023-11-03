@@ -174,20 +174,9 @@ const get_all_job_profiles = asyncHandler(async (req, res) => {
 
 })
 
-const getStudentDetailsByStudId = asyncHandler(async (req, res) => {
-    const student = await studentModel.findOne({ student_id: req.params.id });
-
-    if (student) {
-        res.status(200).json(student);
-    } else {
-        res.status(404).json({ message: 'Student not found' });
-    }
-})
-
 module.exports = {
     auth_admin,
     register_admin,
     log_out_admin,
     login_admin,
-    getStudentDetailsByStudId,
 };
