@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const admin = require('../models/adminModel');
+const studentModel = require('../models/studentModel');
 const bcrypt = require('bcryptjs');
 
 const generateToken = require('../utils/generatejwt')
