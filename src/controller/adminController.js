@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const admin = require('../models/adminModel');
+const studentModel = require('../models/studentModel');
 const bcrypt = require('bcryptjs');
 
 const generateToken = require('../utils/generatejwt')
@@ -174,15 +175,13 @@ const get_all_job_profiles = asyncHandler(async (req, res) => {
 })
 
 const getStudentDetailsByStudId = asyncHandler(async (req, res) => {
-    const student = await studentModel.findById(req.params.id);
-    if (!student) {
-        res.status(400)
-        throw new Error('Student not found')
-    }
-    res.status(201).json({
-        student
-    })
+    const student = await studentModel.findOne({ student_id: req.params.id });
 
+    if (student) {
+        res.status(200).json(student);
+    } else {
+        res.status(404).json({ message: 'Student not found' });
+    }
 })
 
 module.exports = {
