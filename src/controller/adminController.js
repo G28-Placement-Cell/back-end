@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const admin = require('../models/adminModel');
 const studentModel = require('../models/studentModel');
+const companyModel = require('../models/companyModel');
 const bcrypt = require('bcryptjs');
 
 const generateToken = require('../utils/generatejwt')
@@ -187,6 +188,18 @@ const getStudent = asyncHandler(async (req, res) => {
 
 })
 
+const getCompany = asyncHandler(async (req, res) => {
+    const company = await companyModel.findById(req.params.id);
+    if (!company) {
+        res.status(400)
+        throw new Error('Company not found')
+    }
+    res.status(201).json({
+        company
+    })
+
+})
+
 module.exports = {
     auth_admin,
     register_admin,
@@ -194,4 +207,5 @@ module.exports = {
     login_admin,
     change_password,
     getStudent,
-};
+    getCompany,
+};  

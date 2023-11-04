@@ -22,8 +22,16 @@ const createJobProfile = asyncHandler(async (req, res) => {
             registration_end_date,
             job_description,
             job_description_file,
-
         } = req.body;
+
+        // Parse and convert ctc to a number
+        const ctcValue = parseFloat(ctc.replace(/[^\d.]/g, ''));
+
+        // Handle stipend as 'N/A' or null
+        let stipendValue = null;
+        if (stipend !== 'N/A') {
+            stipendValue = parseFloat(stipend.replace(/[^\d.]/g, ''));
+        }
 
         const jobProfile = new JobProfile({
             company,
@@ -33,8 +41,8 @@ const createJobProfile = asyncHandler(async (req, res) => {
             open_for,
             company_type,
             cpi_criteria,
-            ctc,
-            stipend,
+            ctc: ctcValue,
+            stipend: stipendValue,
             registration_start_date,
             registration_end_date,
             job_description,
@@ -44,8 +52,8 @@ const createJobProfile = asyncHandler(async (req, res) => {
         const createdJobProfile = await jobProfile.save();
         res.status(201).json(createdJobProfile);
     } catch (error) {
-        // console.error(error); // Log the error for debugging
-        res.status(500).json({ message: 'Internal server error' }); // You can customize the error message and status code
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
