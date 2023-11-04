@@ -134,6 +134,26 @@ const logOutCompany = (req, res) => {
     }
 };
 
+const getCompanyName = asyncHandler(async (req, res) => {
+    try {
+        // if (!req.company || !req.company._id) {
+        //     // If req.company is not defined or doesn't have an _id property
+        //     return res.status(400).json({ message: 'Company information not found' });
+        // }
+
+        const company = await Company.findById(req.params.id);
+
+        if (!company) {
+            return res.status(404).json({ message: 'Company not found' });
+        }
+
+        res.status(200).json({ company });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 //access private
 //route api/company/addjobprofile
 
@@ -459,6 +479,7 @@ module.exports = {
     loginCompany,
     getCompanyProfile,
     logOutCompany,
+    getCompanyName,
     // addJobProfile,
     // viewJobProfile,
     // viewJobProfileById,

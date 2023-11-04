@@ -24,6 +24,6 @@ router.route('/admin/company').get(getAnnouncementsByAdminForCompany);
 router.route('/admin/student').get(getAnnouncementsByAdminForStudent)
 router.route('/admin/student').post(createAnnouncementByAdminForStudent);
 router.route('/admin/company').post(createAnnouncementByAdminForCompany);
-router.route('/admin/company').get(getAnnouncementsByAllCompanies);
+router.route('/admin/companyAnnouncements').get(getAnnouncementsByAllCompanies);
 
 module.exports = router;

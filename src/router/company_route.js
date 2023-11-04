@@ -8,6 +8,7 @@ const {
     loginCompany,
     getCompanyProfile,
     logOutCompany,
+    getCompanyName,
     // addJobProfile,
     // viewJobProfile,
     // viewJobProfileById,
@@ -33,6 +34,7 @@ router.post('/register', registerCompany);
 router.post('/login', loginCompany);
 router.get('/profile/:id', protect, getCompanyProfile);
 router.post('/logout', logOutCompany);
+router.get('/name/:id', getCompanyName);
 // router.post('/jobprofile', protect, addJobProfile);
 // router.get('/jobprofile', protect, viewJobProfile);
 // router.get('/jobprofile/:id', protect, viewJobProfileById);
