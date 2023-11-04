@@ -103,9 +103,14 @@ const loginCompany = asyncHandler(async (req, res) => {
 
 const getCompanyProfile = async (req, res) => {
     try {
-        const comp = await Company.findById(req.company._id);
+        const comp = await Company.findById(req.params.id);
+        if (!comp) {
+            return res.status(404).json({
+                message: 'Company not found',
+            });
+        }
         res.status(200).json({
-            comp
+            comp,
         });
     } catch (error) {
         console.error(error);
@@ -114,6 +119,7 @@ const getCompanyProfile = async (req, res) => {
         });
     }
 };
+
 
 // module.exports = getCompanyProfile;
 

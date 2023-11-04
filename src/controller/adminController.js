@@ -175,10 +175,23 @@ const get_all_job_profiles = asyncHandler(async (req, res) => {
 
 })
 
+const getStudent = asyncHandler(async (req, res) => {
+    const student = await studentModel.findById(req.params.id);
+    if (!student) {
+        res.status(400)
+        throw new Error('Student not found')
+    }
+    res.status(201).json({
+        student
+    })
+
+})
+
 module.exports = {
     auth_admin,
     register_admin,
     log_out_admin,
     login_admin,
-    change_password
+    change_password,
+    getStudent,
 };

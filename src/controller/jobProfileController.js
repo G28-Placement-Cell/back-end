@@ -253,6 +253,16 @@ const removeFromShortlisted = asyncHandler(async (req, res) => {
     })
 })
 
+const getJobProfilesOfCompany = asyncHandler(async (req, res) => {
+    const company = req.params.id;
+    const jobProfiles = await JobProfile.find({company: company});
+    if (jobProfiles.length > 0) {
+        sendSuccessResponse(res, 200, {jobProfiles});
+    } else {
+        sendErrorResponse(res, 404, 'No job profiles found');
+    }
+})
+
 module.exports = {
     createJobProfile,
     getAllJobProfiles,
@@ -262,5 +272,6 @@ module.exports = {
     registerToJobprofile,
     deregisterFromJobprofile,
     addToShortlisted,
-    removeFromShortlisted
+    removeFromShortlisted,
+    getJobProfilesOfCompany
 };
