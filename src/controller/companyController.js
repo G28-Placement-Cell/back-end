@@ -18,6 +18,52 @@ const authCompany = asyncHandler(async (req, res) => {
     })
 })
 
+const getCompanyProfile = asyncHandler(async (req, res) => {
+    // console.log(req.student);
+    const comp = await Company.findOne(req.company._id);
+    res.status(201).json({
+        comp
+    })
+})
+
+// module.exports = getCompanyProfile;
+
+
+//access private
+//route api/company/logout
+
+const logOutCompany = (req, res) => {
+    try {
+        res.clearCookie('jwt', {
+            httpOnly: true,
+            expires: new Date(0),
+        });
+
+        return sendSuccessResponse(res, 201, { message: 'Logged out' });
+    } catch (error) {
+        return sendErrorResponse(res, 500, 'Server Error');
+    }
+};
+
+const getCompanyName = asyncHandler(async (req, res) => {
+    try {
+        // if (!req.company || !req.company._id) {
+        //     // If req.company is not defined or doesn't have an _id property
+        //     return res.status(400).json({ message: 'Company information not found' });
+        // }
+
+        const company = await Company.findById(req.params.id);
+
+        if (!company) {
+            return res.status(404).json({ message: 'Company not found' });
+        }
+
+        res.status(200).json({ company });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 //access public
 //route api/company/register
@@ -95,339 +141,40 @@ const loginCompany = asyncHandler(async (req, res) => {
 });
 
 
+const change_password = asyncHandler(async (req, res) => {
+    // console.log(req.admin);
+    console.log(req.body);
+    console.log(req.company)
+    const { currentPassword, newPassword, confirmPassword } = req.body;
 
-//access private
-//route api/company/profile
+    const cmp = await Company.findById(req.company._id);
 
-// const Company = require('../models/companyModel'); // Import your Company model
-
-const getCompanyProfile = async (req, res) => {
-    try {
-        const comp = await Company.findById(req.params.id);
-        if (!comp) {
-            return res.status(404).json({
-                message: 'Company not found',
-            });
-        }
-        res.status(200).json({
-            comp,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Server Error',
-        });
+    let isMatch = false;
+    if (cmp) {
+        isMatch = await bcrypt.compare(currentPassword, cmp.password);
     }
-};
-
-
-// module.exports = getCompanyProfile;
-
-
-//access private
-//route api/company/logout
-
-const logOutCompany = (req, res) => {
-    try {
-        res.clearCookie('jwt', {
-            httpOnly: true,
-            expires: new Date(0),
-        });
-
-        return sendSuccessResponse(res, 201, { message: 'Logged out' });
-    } catch (error) {
-        return sendErrorResponse(res, 500, 'Server Error');
+    if (!cmp || !isMatch) {
+        res.status(400)
+        throw new Error('Enter valid current password')
     }
-};
-
-const getCompanyName = asyncHandler(async (req, res) => {
-    try {
-        // if (!req.company || !req.company._id) {
-        //     // If req.company is not defined or doesn't have an _id property
-        //     return res.status(400).json({ message: 'Company information not found' });
-        // }
-
-        const company = await Company.findById(req.params.id);
-
-        if (!company) {
-            return res.status(404).json({ message: 'Company not found' });
-        }
-
-        res.status(200).json({ company });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+    if (newPassword !== confirmPassword) {
+        res.status(400)
+        throw new Error('New password and confirm password do not match')
     }
-});
+    const salt = await bcrypt.genSalt(11);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    let check = await bcrypt.compare(newPassword, cmp.password);
+    if (check) {
+        res.status(400)
+        throw new Error('New password cannot be same as current password')
+    }
+    const updatedadmin = await Company.findByIdAndUpdate(req.company._id, { password: hashedPassword }, { new: true });
+    res.status(201).json({
+        message: "password changed",
+        updatedadmin
+    })
 
-//access private
-//route api/company/addjobprofile
-
-// const addJobProfile = async (req, res) => {
-//     try {
-//         const { name, description, salary, bond, location } = req.body;
-//         const jobProfile = await JobProfile.create({
-//             name,
-//             description,
-//             salary,
-//             bond,
-//             location,
-//             company: req.company._id,
-//         });
-
-//         if (jobProfile) {
-//             return sendSuccessResponse(res, 201, jobProfile);
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private
-// //route api/company/viewjobprofile
-
-// const viewJobProfile = async (req, res) => {
-//     try {
-//         const jobProfile = await JobProfile.find({ company: req.company._id });
-//         if (jobProfile) {
-//             return sendSuccessResponse(res, 200, { job_profile: jobProfile });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-
-// //access private
-// //route api/company/viewjobprofile/:id
-
-// const viewJobProfileById = async (req, res) => {
-//     try {
-//         const jobProfile = await JobProfile.findById(req.params.id);
-//         if (jobProfile) {
-//             return sendSuccessResponse(res, 200, { job_profile: jobProfile });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private
-// //route api/company/viewjobprofile/:id
-
-// const deleteJobProfileById = async (req, res) => {
-//     try {
-//         const jobProfile = await JobProfile.findById(req.params.id);
-//         if (jobProfile) {
-//             await jobProfile.remove();
-//             return sendSuccessResponse(res, 200, { message: 'Job profile deleted' });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private
-// //route api/company/viewjobprofile/:id
-
-// const updateJobProfileById = async (req, res) => {
-//     try {
-//         const { name, description, salary, bond, location } = req.body;
-//         const jobProfile = await JobProfile.findById(req.params.id);
-
-//         if (jobProfile) {
-//             jobProfile.name = name;
-//             jobProfile.description = description;
-//             jobProfile.salary = salary;
-//             jobProfile.bond = bond;
-//             jobProfile.location = location;
-
-//             const updatedJobProfile = await jobProfile.save();
-//             return sendSuccessResponse(res, 201, { updatedJobProfile });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-
-// //access private
-// //route api/company/viewjobprofile/:id
-
-// const applyJobProfileById = async (req, res) => {
-//     try {
-//         const jobProfile = await JobProfile.findById(req.params.id);
-
-//         if (jobProfile) {
-//             jobProfile.applicants.push(req.student._id);
-//             const updatedJobProfile = await jobProfile.save();
-//             return sendSuccessResponse(res, 201, { updatedJobProfile });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-
-// //access private
-// //route api/company/viewjobprofile/:id
-
-// const viewApplicantsById = async (req, res) => {
-//     try {
-//         const jobProfile = await JobProfile.findById(req.params.id).populate('applicants');
-//         if (jobProfile) {
-//             return sendSuccessResponse(res, 200, { jobProfile });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-
-// // add announcement
-// //access private
-// //route api/company/announcement
-
-// const addAnnouncement = async (req, res) => {
-//     try {
-//         const { title, description, date, file, sent_to, is_company_announcement, company, job_profile } = req.body;
-
-//         const announcement = await Announcement.create({
-//             title, description, date, file, sent_to, is_company_announcement, company, job_profile
-//         });
-
-//         if (announcement) {
-//             return sendSuccessResponse(res, 201, {
-//                 _id: announcement._id,
-//                 title: announcement.title,
-//                 description: announcement.description,
-//                 date: announcement.date,
-//                 file: announcement.file,
-//                 sent_to: announcement.sent_to,
-//                 is_company_announcement: announcement.is_company_announcement,
-//                 company: announcement.company,
-//                 job_profile: announcement.job_profile
-//             });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-// //access private
-// //route api/company/announcement
-
-// const viewAnnouncement = async (req, res) => {
-//     try {
-//         const announcements = await Announcement.find({ company: req.company._id });
-
-//         if (announcements) {
-//             return sendSuccessResponse(res, 200, { announcements });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private
-// //route api/company/announcement/:id
-
-// const viewAnnouncementById = async (req, res) => {
-//     try {
-//         const announcement = await Announcement.findById(req.params.id);
-
-//         if (announcement) {
-//             return sendSuccessResponse(res, 201, { announcement });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private
-// //route api/company/announcement/:id
-
-// const deleteAnnouncementById = async (req, res) => {
-//     try {
-//         const announcement = await Announcement.findById(req.params.id);
-
-//         if (announcement) {
-//             await announcement.remove();
-//             return sendSuccessResponse(res, 201, { message: 'Deleted' });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private
-// //route api/company/announcement/:id
-
-// const updateAnnouncementById = async (req, res) => {
-//     const { title, description, date, file, sent_to, is_company_announcement, company, job_profile } = req.body;
-//     const announcementId = req.params.id;
-
-//     try {
-//         const announcement = await Announcement.findById(announcementId);
-
-//         if (announcement) {
-//             announcement.title = title;
-//             announcement.description = description;
-//             announcement.date = date;
-//             announcement.file = file;
-//             announcement.sent_to = sent_to;
-//             announcement.is_company_announcement = is_company_announcement;
-//             announcement.company = company;
-//             announcement.job_profile = job_profile;
-
-//             const updatedAnnouncement = await announcement.save();
-
-//             return sendSuccessResponse(res, 201, { updatedAnnouncement });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
-
-// //access private    
-// //route api/company/announcement/:id
-
-// const viewStudentsByJobProfileId = async (req, res) => {
-//     try {
-//         const announcement = await Announcement.findById(req.params.id).populate('job_profile');
-
-//         if (announcement) {
-//             return sendSuccessResponse(res, 201, { announcement });
-//         } else {
-//             return sendErrorResponse(res, 400, 'Invalid user data');
-//         }
-//     } catch (error) {
-//         return sendErrorResponse(res, 500, 'Server Error');
-//     }
-// };
+})
 
 const verify = asyncHandler(async (req, res) => {
     const { email } = req.body;
@@ -483,25 +230,12 @@ module.exports = {
     authCompany,
     registerCompany,
     loginCompany,
-    getCompanyProfile,
-    logOutCompany,
-    getCompanyName,
-    // addJobProfile,
-    // viewJobProfile,
-    // viewJobProfileById,
-    // deleteJobProfileById,
-    // updateJobProfileById,
-    // applyJobProfileById,
-    // viewApplicantsById,
-    // // announceResultById,
-    // addAnnouncement,
-    // viewAnnouncement,
-    // viewAnnouncementById,
-    // deleteAnnouncementById,
-    // updateAnnouncementById,
-    // viewStudentsByJobProfileId
     verify,
     reject,
     getregcompany,
-    getpencompany
+    getpencompany,
+    change_password,
+    getCompanyName,
+    getCompanyProfile,
+    logOutCompany
 };

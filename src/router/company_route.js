@@ -9,6 +9,7 @@ const {
     getCompanyProfile,
     logOutCompany,
     getCompanyName,
+    change_password,
     // addJobProfile,
     // viewJobProfile,
     // viewJobProfileById,
@@ -32,7 +33,7 @@ const {
 router.post('/auth', authCompany);
 router.post('/register', registerCompany);
 router.post('/login', loginCompany);
-router.get('/profile/:id', protect, getCompanyProfile);
+router.get('/profile', protect, getCompanyProfile);
 router.post('/logout', logOutCompany);
 router.get('/name/:id', getCompanyName);
 // router.post('/jobprofile', protect, addJobProfile);
@@ -53,5 +54,6 @@ router.post('/verify', protectAdmin, verify);
 router.post('/reject', protectAdmin, reject);
 router.get('/getregcompany', protectAdmin, getregcompany);
 router.get('/getpencompany', protectAdmin, getpencompany);
+router.post('/change_password', protect, change_password);
 
 module.exports = router;
