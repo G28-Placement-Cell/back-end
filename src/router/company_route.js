@@ -9,6 +9,7 @@ const {
     getCompanyProfile,
     logOutCompany,
     getCompanyName,
+    change_password,
     // addJobProfile,
     // viewJobProfile,
     // viewJobProfileById,
@@ -53,5 +54,6 @@ router.post('/verify', protectAdmin, verify);
 router.post('/reject', protectAdmin, reject);
 router.get('/getregcompany', protectAdmin, getregcompany);
 router.get('/getpencompany', protectAdmin, getpencompany);
+router.post('/change_password', protect, change_password);
 
 module.exports = router;

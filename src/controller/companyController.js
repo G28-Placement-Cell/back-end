@@ -431,6 +431,44 @@ const getCompanyName = asyncHandler(async (req, res) => {
 //     }
 // };
 
+//access private
+//route api/company/change_password
+
+const change_password = asyncHandler(async (req, res) => {
+    // console.log(req.admin);
+    console.log(req.body);
+    console.log(req.company)
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    const cmp = await Company.findById(req.company._id);
+
+    let isMatch = false;
+    if (cmp) {
+        isMatch = await bcrypt.compare(currentPassword, cmp.password);
+    }
+    if (!cmp || !isMatch) {
+        res.status(400)
+        throw new Error('Enter valid current password')
+    }
+    if (newPassword !== confirmPassword) {
+        res.status(400)
+        throw new Error('New password and confirm password do not match')
+    }
+    const salt = await bcrypt.genSalt(11);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    let check = await bcrypt.compare(newPassword, cmp.password);
+    if (check) {
+        res.status(400)
+        throw new Error('New password cannot be same as current password')
+    }
+    const updatedadmin = await Company.findByIdAndUpdate(req.company._id, { password: hashedPassword }, { new: true });
+    res.status(201).json({
+        message: "password changed",
+        updatedadmin
+    })
+
+})
+
 const verify = asyncHandler(async (req, res) => {
     const { email } = req.body;
     const companyExist = await Company.findOne({ email });
@@ -505,5 +543,6 @@ module.exports = {
     verify,
     reject,
     getregcompany,
-    getpencompany
+    getpencompany,
+    change_password
 };
