@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Announcement = require('../models/announcementModel');
+const Company = require('../models/companyModel');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
 
 // @desc    Create a new announcement
@@ -13,6 +14,7 @@ const createAnnouncement = asyncHandler(async (req, res) => {
         file,
         sent_to,
         is_company_announcement,
+        for_students,
         company,
         job_profile,
     } = req.body;
@@ -24,6 +26,7 @@ const createAnnouncement = asyncHandler(async (req, res) => {
         file,
         sent_to,
         is_company_announcement,
+        for_students,
         company,
         job_profile,
     });
@@ -134,7 +137,7 @@ const getAnnouncementsByAdminForCompany = asyncHandler(async (req, res) => {
         res.status(404).json({ message: 'Announcements not found' });
     }
 });
-    
+
 const createAnnouncementByAdminForStudent = asyncHandler(async (req, res) => {
     const {
         title,
@@ -185,15 +188,16 @@ const createAnnouncementByAdminForCompany = asyncHandler(async (req, res) => {
     }
 });
 
-const getAnnouncementsByCompany = asyncHandler(async (req, res) => {
-    const announcements = await Announcement.find({ company: req.params.id });
-
-    if (announcements) {
-        res.status(200).json(announcements);
-    } else {
-        res.status(404).json({ message: 'Announcements not found' });
+const getAnnouncementsByAllCompanies = async (req, res) => {
+    try {
+        const announcements = await Announcement.find({ is_company_announcement: true })
+            .populate('company', 'companyname'); // Populate the 'companyname' field
+        res.json(announcements);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
     }
-});
+}
 
 module.exports = {
     createAnnouncement,
@@ -205,5 +209,5 @@ module.exports = {
     getAnnouncementsByAdminForCompany,
     createAnnouncementByAdminForStudent,
     createAnnouncementByAdminForCompany,
-    getAnnouncementsByCompany,
+    getAnnouncementsByAllCompanies,
 };
