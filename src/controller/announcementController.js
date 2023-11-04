@@ -185,8 +185,10 @@ const createAnnouncementByAdminForCompany = asyncHandler(async (req, res) => {
     }
 });
 
-const getAnnouncementsByCompany = asyncHandler(async (req, res) => {
-    const announcements = await Announcement.find({ company: req.params.id });
+const getAnnouncementsByAllCompanies = asyncHandler(async (req, res) => {
+    const announcements = await Announcement.find({ is_company_announcement: true });
+
+    // get co
 
     if (announcements) {
         res.status(200).json(announcements);
@@ -205,5 +207,5 @@ module.exports = {
     getAnnouncementsByAdminForCompany,
     createAnnouncementByAdminForStudent,
     createAnnouncementByAdminForCompany,
-    getAnnouncementsByCompany,
+    getAnnouncementsByAllCompanies,
 };
