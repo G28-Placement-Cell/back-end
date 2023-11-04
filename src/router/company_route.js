@@ -31,7 +31,7 @@ const {
 router.post('/auth', authCompany);
 router.post('/register', registerCompany);
 router.post('/login', loginCompany);
-router.get('/profile/:id', protect, getCompanyProfile);
+router.get('/profile', protect, getCompanyProfile);
 router.post('/logout', logOutCompany);
 // router.post('/jobprofile', protect, addJobProfile);
 // router.get('/jobprofile', protect, viewJobProfile);

@@ -101,19 +101,27 @@ const loginCompany = asyncHandler(async (req, res) => {
 
 // const Company = require('../models/companyModel'); // Import your Company model
 
-const getCompanyProfile = async (req, res) => {
-    try {
-        const comp = await Company.findById(req.company._id);
-        res.status(200).json({
-            comp
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
-};
+// const getCompanyProfile = async (req, res) => {
+//     try {
+//         const comp = await Company.findById(req.company._id);
+//         res.status(200).json({
+//             comp
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({
+//             message: 'Server Error',
+//         });
+//     }
+// };
+
+const getCompanyProfile = asyncHandler(async (req, res) => {
+    // console.log(req.student);
+    const comp = await Company.findOne(req.company._id);
+    res.status(201).json({
+        comp
+    })
+})
 
 // module.exports = getCompanyProfile;
 
