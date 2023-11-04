@@ -235,6 +235,7 @@ const reject = asyncHandler(async (req, res) => {
 
 const verify = asyncHandler(async (req, res) => {
     const { student_id } = req.body;
+    console.log(req.body);
     const studentExist = await student.findOne({
         student_id: student_id
     });

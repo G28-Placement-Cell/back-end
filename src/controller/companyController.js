@@ -424,9 +424,9 @@ const verify = asyncHandler(async (req, res) => {
 
 
 const reject = asyncHandler(async (req, res) => {
-    const { company_id } = req.body;
+    const { email } = req.body;
     const companyExist = await Company.findOne({
-        company_id: company_id
+        email: email
     });
     if (!companyExist) {
         res.status(400)

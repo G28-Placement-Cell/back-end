@@ -108,16 +108,17 @@ const log_out_admin = asyncHandler(async (req, res) => {
 
 const change_password = asyncHandler(async (req, res) => {
     // console.log(req.admin);
-    // console.log(req.body);
+    console.log(req.body);
+    console.log(req.admin)
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
-    const stu = await admin.findById(req.admin._id);
+    const adm = await admin.findById(req.admin._id);
 
     let isMatch = false;
-    if (stu) {
-        isMatch = await bcrypt.compare(currentPassword, stu.password);
+    if (adm) {
+        isMatch = await bcrypt.compare(currentPassword, adm.password);
     }
-    if (!stu || !isMatch) {
+    if (!adm || !isMatch) {
         res.status(400)
         throw new Error('Enter valid current password')
     }
@@ -127,7 +128,7 @@ const change_password = asyncHandler(async (req, res) => {
     }
     const salt = await bcrypt.genSalt(11);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    let check = await bcrypt.compare(newPassword, stu.password);
+    let check = await bcrypt.compare(newPassword, adm.password);
     if (check) {
         res.status(400)
         throw new Error('New password cannot be same as current password')
@@ -179,4 +180,5 @@ module.exports = {
     register_admin,
     log_out_admin,
     login_admin,
+    change_password
 };
