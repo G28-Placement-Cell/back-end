@@ -11,7 +11,8 @@ const {
     createAnnouncementByAdminForCompany,
     createAnnouncementByAdminForStudent,
     getAnnouncementsByAllCompanies,
-    getAnnouncementsByCompanyId
+    getAnnouncementsByCompanyId,
+    createAnnouncementByCompanyForStudent
 } = require('../controller/announcementController');
 const protect = require('../middleware/authmiddleware');
 const { validateAnnouncement } = require('../middleware/validatemiddleware.js');
@@ -27,5 +28,7 @@ router.route('/admin/student').post(createAnnouncementByAdminForStudent);
 router.route('/admin/company').post(createAnnouncementByAdminForCompany);
 router.route('/admin/companyAnnouncements').get(getAnnouncementsByAllCompanies);
 router.route('/company/:id').get(getAnnouncementsByCompanyId);
+router.route('/company/:id').post(createAnnouncementByCompanyForStudent);
+
 
 module.exports = router;

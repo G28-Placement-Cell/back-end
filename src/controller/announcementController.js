@@ -216,6 +216,31 @@ const getAnnouncementsByCompanyId = async (req, res) => {
     }
 }
 
+const createAnnouncementByCompanyForStudent = async (req, res) => {
+    const {
+        title,
+        description,
+        date,
+        is_company_announcement,
+        for_students,
+    } = req.body;
+
+    const announcement = await Announcement.create({
+        title,
+        description,
+        date,
+        is_company_announcement: true,
+        for_students: true,
+    });
+
+    if (announcement) {
+        // Include the _id in the response
+        res.status(201).json(announcement);
+    } else {
+        res.status(400).json({ message: 'Invalid announcement data' });
+    }
+}
+
 module.exports = {
     createAnnouncement,
     getAllAnnouncements,
@@ -227,5 +252,6 @@ module.exports = {
     createAnnouncementByAdminForStudent,
     createAnnouncementByAdminForCompany,
     getAnnouncementsByAllCompanies,
-    getAnnouncementsByCompanyId
+    getAnnouncementsByCompanyId,
+    createAnnouncementByCompanyForStudent
 };

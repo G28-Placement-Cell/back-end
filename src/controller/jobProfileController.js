@@ -24,18 +24,6 @@ const createJobProfile = asyncHandler(async (req, res) => {
             job_description_file,
         } = req.body;
 
-        // Check if ctc is a string, and if not, convert it to a string
-        const ctcValue = typeof ctc === 'string' ? ctc : ctc.toString();
-
-        // Parse and convert ctc to a number
-        const ctcValueAsNumber = parseFloat(ctcValue.replace(/[^\d.]/g, ''));
-
-        // Handle stipend as 'N/A' or null
-        let stipendValue = null;
-        if (stipend !== 'N/A') {
-            stipendValue = parseFloat(stipend.replace(/[^\d.]/g, ''));
-        }
-
         const jobProfile = new JobProfile({
             company,
             company_name,
@@ -44,8 +32,8 @@ const createJobProfile = asyncHandler(async (req, res) => {
             open_for,
             company_type,
             cpi_criteria,
-            ctc: ctcValueAsNumber,
-            stipend: stipendValue,
+            ctc,
+            stipend,
             registration_start_date,
             registration_end_date,
             job_description,
@@ -59,6 +47,7 @@ const createJobProfile = asyncHandler(async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 
 
