@@ -199,6 +199,23 @@ const getAnnouncementsByAllCompanies = async (req, res) => {
     }
 }
 
+const getAnnouncementsByCompanyId = async (req, res) => {
+    try {
+        const companyId = req.params.id;
+        const announcements = await Announcement.find({ company: companyId });
+        if (announcements) {
+            res.status(200).json(announcements);
+        }
+        else {
+            res.status(404).json({ message: 'Announcements not found' })
+        }
+    }
+    catch {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
 module.exports = {
     createAnnouncement,
     getAllAnnouncements,
@@ -210,4 +227,5 @@ module.exports = {
     createAnnouncementByAdminForStudent,
     createAnnouncementByAdminForCompany,
     getAnnouncementsByAllCompanies,
+    getAnnouncementsByCompanyId
 };
