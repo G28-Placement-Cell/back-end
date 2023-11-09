@@ -16,9 +16,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-fileRouter.get('/:id', FileController.get);
+fileRouter.get('/resume/:id', FileController.get_resume);
+fileRouter.get('/profilepic/:id', FileController.get_profilepic);
 
-fileRouter.post('/', protect, upload.single('file'), FileController.post);
-
+fileRouter.post('/resume', protect, upload.single('file'), FileController.resume);
+fileRouter.post('/profilepic', protect, upload.single('file'), FileController.profilepic);
 
 module.exports = fileRouter;
