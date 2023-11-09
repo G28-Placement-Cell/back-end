@@ -203,16 +203,40 @@ const getAnnouncementsByCompanyId = async (req, res) => {
     try {
         const companyId = req.params.id;
         const announcements = await Announcement.find({ company: companyId });
-        if (announcements) {
+        if (announcements.length > 0) { // Check if there are announcements
             res.status(200).json(announcements);
+        } else {
+            res.status(404).json({ message: 'Announcements not found' });
         }
-        else {
-            res.status(404).json({ message: 'Announcements not found' })
-        }
-    }
-    catch {
-        console.error(error);
+    } catch (error) {
+        console.error(error); // Corrected to use the "error" variable
         res.status(500).json({ error: 'Server error' });
+    }
+}
+
+
+const createAnnouncementByCompanyForStudent = async (req, res) => {
+    const companyId = req.params.id;
+    const {
+        title,
+        description,
+        date,
+    } = req.body;
+
+    const announcement = await Announcement.create({
+        title,
+        description,
+        date,
+        is_company_announcement: true,
+        for_students: true,
+        company: companyId,
+    });
+
+    if (announcement) {
+        // Include the _id in the response
+        res.status(201).json(announcement);
+    } else {
+        res.status(400).json({ message: 'Invalid announcement data' });
     }
 }
 
@@ -227,5 +251,6 @@ module.exports = {
     createAnnouncementByAdminForStudent,
     createAnnouncementByAdminForCompany,
     getAnnouncementsByAllCompanies,
-    getAnnouncementsByCompanyId
+    getAnnouncementsByCompanyId,
+    createAnnouncementByCompanyForStudent
 };
