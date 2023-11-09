@@ -1,0 +1,63 @@
+const Student = require("../models/studentModel");
+const Reset = require("../models/resetModel");
+const { NotFoundError, UnauthorizedError, ForbiddenError } = require("../errors");
+const crypto = require("crypto");
+const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    auth: {
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASS,
+    },
+});
+
+{/* <a href="https://front-end-main-three.vercel.app/password-reset/${reset._id}">Click Here</a> */ }
+
+async function createReset({ student_id }) {
+    try {
+        console.log(student_id)
+        const user = await Student.findOne({ student_id: student_id });
+        const email = user.email.main;
+        console.log(email)
+        if (!user) throw new NotFoundError("User not found");
+        const otp = crypto.randomBytes(32).toString("hex");
+        console.log(user._id);
+        const reset = await Reset.create({ userId: user._id, otp: otp });
+        await transporter.sendMail({
+            from: `${process.env.NODEMAILER_EMAIL}`,
+            to: email,
+            subject: "Placement Password Reset",
+            html: `<p>Use this OTP to reset your password: <b>${otp}</b></p>
+        <p>This OTP will expire in 1 hour</p>
+        <p>Password Reset Link: </p>`,
+        });
+        return reset;
+    }
+    catch (err) {
+        // if (err.code === 11000) throw new ForbiddenError("Reset already requested");
+        throw new Error(err);
+    }
+}
+
+async function applyReset({ otp, resetId, password }) {
+    const reset = await Reset.findById(resetId).exec();
+    if (!reset) throw new NotFoundError("Reset expired");
+    if (reset.otp !== otp) throw new UnauthorizedError("Invalid OTP");
+    password = await bcrypt.hash(password, 10);
+    console.log(reset);
+    const user = await Student.findByIdAndUpdate(reset.userId, {
+        password,
+    });
+    if (!user) throw new NotFoundError("User not found");
+    await Reset.findByIdAndDelete(resetId);
+    return user;
+}
+
+module.exports = {
+    createReset,
+    applyReset,
+};
