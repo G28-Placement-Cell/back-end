@@ -51,7 +51,7 @@ const jobProfileSchema = new mongoose.Schema({
     },
     job_description_file: {
         type: String,
-        required: [true, "Please enter a job description file"],
+        required: false
     },
     applicants: [
         {

@@ -24,8 +24,11 @@ const createJobProfile = asyncHandler(async (req, res) => {
             job_description_file,
         } = req.body;
 
+        // Check if ctc is a string, and if not, convert it to a string
+        const ctcValue = typeof ctc === 'string' ? ctc : ctc.toString();
+
         // Parse and convert ctc to a number
-        const ctcValue = parseFloat(ctc.replace(/[^\d.]/g, ''));
+        const ctcValueAsNumber = parseFloat(ctcValue.replace(/[^\d.]/g, ''));
 
         // Handle stipend as 'N/A' or null
         let stipendValue = null;
@@ -41,7 +44,7 @@ const createJobProfile = asyncHandler(async (req, res) => {
             open_for,
             company_type,
             cpi_criteria,
-            ctc: ctcValue,
+            ctc: ctcValueAsNumber,
             stipend: stipendValue,
             registration_start_date,
             registration_end_date,
