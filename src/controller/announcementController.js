@@ -203,26 +203,24 @@ const getAnnouncementsByCompanyId = async (req, res) => {
     try {
         const companyId = req.params.id;
         const announcements = await Announcement.find({ company: companyId });
-        if (announcements) {
+        if (announcements.length > 0) { // Check if there are announcements
             res.status(200).json(announcements);
+        } else {
+            res.status(404).json({ message: 'Announcements not found' });
         }
-        else {
-            res.status(404).json({ message: 'Announcements not found' })
-        }
-    }
-    catch {
-        console.error(error);
+    } catch (error) {
+        console.error(error); // Corrected to use the "error" variable
         res.status(500).json({ error: 'Server error' });
     }
 }
 
+
 const createAnnouncementByCompanyForStudent = async (req, res) => {
+    const companyId = req.params.id;
     const {
         title,
         description,
         date,
-        is_company_announcement,
-        for_students,
     } = req.body;
 
     const announcement = await Announcement.create({
@@ -231,6 +229,7 @@ const createAnnouncementByCompanyForStudent = async (req, res) => {
         date,
         is_company_announcement: true,
         for_students: true,
+        company: companyId,
     });
 
     if (announcement) {
