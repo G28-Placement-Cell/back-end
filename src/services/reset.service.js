@@ -19,15 +19,15 @@ const transporter = nodemailer.createTransport({
 
 async function createReset({ student_id }) {
     try {
-        console.log(student_id)
+        // console.log(student_id)
         const user = await Student.findOne({ student_id: student_id });
         const email = user.email.main;
-        console.log(email)
+        // console.log(email)
         if (!user) throw new NotFoundError("User not found");
         const otp = crypto.randomBytes(32).toString("hex");
-        console.log(user._id);
+        // console.log(user._id);
         const reset = await Reset.create({ userId: user._id, otp: otp });
-        console.log(reset);
+        // console.log(reset);
         await transporter.sendMail({
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
@@ -49,7 +49,7 @@ async function applyReset({ otp, resetId, password }) {
     if (!reset) throw new NotFoundError("Reset expired");
     if (reset.otp !== otp) throw new UnauthorizedError("Invalid OTP");
     password = await bcrypt.hash(password, 10);
-    console.log(reset);
+    // console.log(reset);
     const user = await Student.findByIdAndUpdate(reset.userId, {
         password,
     });
