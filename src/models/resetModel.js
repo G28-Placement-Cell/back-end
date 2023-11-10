@@ -1,28 +1,28 @@
 const mongoose = require("mongoose");
 const Student = require('./studentModel')
-const Schema = mongoose.Schema;
 
 const EXPIRATION_TIME = 60 * 60;
 
-const ResetSchema = new Schema({
+const ResetSchema = new mongoose.Schema({
     otp: {
-        type: Schema.Types.String,
+        type: String,
         required: [true, "Code is required"],
         maxlength: 255,
     },
     userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Student',
-        unique: true,
+        type: mongoose.Schema.Types.ObjectId,
+        // ref: "Student",
+        // unique: true,
     },
     createdAt: {
-        type: Schema.Types.Date,
+        type: Date,
         default: Date.now,
         expires: EXPIRATION_TIME,
     },
 });
 
-const ResetModel =
-    mongoose.models["Reset"] ?? mongoose.model("Reset", ResetSchema);
+// const ResetModel =
+//     mongoose.models["Reset"] ?? mongoose.model("Reset", ResetSchema);
 
-module.exports = ResetModel;
+// module.exports = ResetModel;
+module.exports = mongoose.model("Reset", ResetSchema);
