@@ -18,8 +18,8 @@ const ResetController = {
     },
     apply: async (req, res, next) => {
         try {
-            const resetId = req.params.id;
-            const { otp, password } = req.body;
+            // const resetId = req.params.id;
+            const { otp, password ,resetId} = req.body;
             if (!otp || !password) {
                 throw new BadRequestError("OTP and password are required");
             }

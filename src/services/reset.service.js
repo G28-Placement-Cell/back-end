@@ -27,6 +27,7 @@ async function createReset({ student_id }) {
         const otp = crypto.randomBytes(32).toString("hex");
         console.log(user._id);
         const reset = await Reset.create({ userId: user._id, otp: otp });
+        console.log(reset);
         await transporter.sendMail({
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
