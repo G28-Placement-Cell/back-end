@@ -97,29 +97,45 @@ const updateJobProfile = asyncHandler(async (req, res) => {
         registration_end_date,
         job_description,
         job_description_file,
-     } = req.body;
+    } = req.body;
     const jobProfileId = req.params.id;
+    console.log('Received update request for job profile ID:', jobProfileId);
 
-    const jobProfile = await JobProfile.findById(jobProfileId);
+    try {
+        // Check if the job profile exists
+        const jobProfile = await JobProfile.findById(jobProfileId);
 
-    if (jobProfile) {
-        jobProfile.company_name = company_name;
-        jobProfile.offer_type = offer_type;
-        jobProfile.location = location;
-        jobProfile.open_for = open_for;
-        jobProfile.cpi_criteria = cpi_criteria;
-        jobProfile.ctc = ctc;
-        jobProfile.registration_start_date = registration_start_date;
-        jobProfile.registration_end_date = registration_end_date;
-        jobProfile.job_description = job_description;
-        jobProfile.job_description_file = job_description_file;
+        if (jobProfile) {
+            console.log('Found job profile:', jobProfile);
 
-        const updatedJobProfile = await jobProfile.save();
-        res.status(200).json(updatedJobProfile);
-    } else {
-        res.status(404).json({ message: 'Job profile not found' });
+            // Update job profile fields
+            jobProfile.company_name = company_name;
+            jobProfile.offer_type = offer_type;
+            jobProfile.location = location;
+            jobProfile.open_for = open_for;
+            jobProfile.cpi_criteria = cpi_criteria;
+            jobProfile.ctc = ctc;
+            jobProfile.registration_start_date = registration_start_date;
+            jobProfile.registration_end_date = registration_end_date;
+            jobProfile.job_description = job_description;
+            jobProfile.job_description_file = job_description_file;
+
+            // Save the updated job profile
+            const updatedJobProfile = await jobProfile.save();
+            console.log('Job profile updated successfully:', updatedJobProfile);
+
+            // Send the updated job profile in the response
+            res.status(200).json(updatedJobProfile);
+        } else {
+            console.log('Job profile not found');
+            res.status(404).json({ message: 'Job profile not found' });
+        }
+    } catch (error) {
+        console.error('Error updating job profile:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 // @desc    Delete a job profile by ID
 // @route   DELETE /api/jobProfiles/:id
