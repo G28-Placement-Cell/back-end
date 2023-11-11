@@ -4,8 +4,9 @@ const { BadRequestError } = require("../errors");
 const ResetController = {
     create: async (req, res, next) => {
         try {
-            // console.log(req.body);
-            const reset = await createReset({ student_id: req.body.student_id });
+            // console.log(req.body.student_id);
+            const student_id = req.body.student_id;
+            const reset = await createReset({ student_id });
             res.json({
                 message: "Reset created successfully",
                 payload: {

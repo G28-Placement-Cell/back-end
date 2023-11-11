@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Student = require('./studentModel')
+// const Student = require('./studentModel')
 
 const EXPIRATION_TIME = 60 * 60;
 
@@ -11,8 +11,8 @@ const ResetSchema = new mongoose.Schema({
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        // ref: "Student",
-        // unique: true,
+        // ref: 'Company',
+        unique: true,
     },
     createdAt: {
         type: Date,
