@@ -9,7 +9,7 @@ const FileController = {
     get_profilepic: async (req, res) => {
         const { id } = req.params;
         await retrieveFile({ fileId: id, stream: res });
-        res.set('content-typee', 'image / png', 'image / jpg')
+        // res.set('content-typee', 'image / png', 'image / jpg')
     },
     resume: async (req, res) => {
         const { id } = await uploadFile({ file: req.file });
@@ -50,6 +50,7 @@ const FileController = {
             });
         }
     },
+    
 
 };
 
