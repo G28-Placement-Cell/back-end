@@ -279,6 +279,17 @@ const getJobProfilesOfCompany = asyncHandler(async (req, res) => {
     }
 })
 
+const getRegStudentsOfJobProfile = asyncHandler(async (req, res) => {
+    const jobProfileId = req.params.id;
+    const jobProfile = await JobProfile.findById(jobProfileId);
+    if (jobProfile) {
+        const students = await Student.find({jobprofiles: jobProfileId});
+        sendSuccessResponse(res, 200, {students});
+    } else {
+        sendErrorResponse(res, 404, 'Job profile not found');
+    }
+})
+
 module.exports = {
     createJobProfile,
     getAllJobProfiles,
@@ -289,5 +300,6 @@ module.exports = {
     deregisterFromJobprofile,
     addToShortlisted,
     removeFromShortlisted,
-    getJobProfilesOfCompany
+    getJobProfilesOfCompany,
+    getRegStudentsOfJobProfile
 };

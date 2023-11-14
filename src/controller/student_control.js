@@ -272,6 +272,17 @@ const get_all_job_profiles = asyncHandler(async (req, res) => {
 
 })
 
+const getStudentById = asyncHandler(async (req, res) => {
+    const studentExist = await student.findById(req.params.id);
+    if (!studentExist) {
+        res.status(400)
+        throw new Error('Student does not exist')
+    }
+    res.status(201).json({
+        studentExist
+    })
+})
+
 module.exports = {
     auth_student,
     register_student,
@@ -284,6 +295,6 @@ module.exports = {
     reject,
     verify,
     getregstudent,
-    getpenstudent
-
+    getpenstudent,
+    getStudentById
 };
