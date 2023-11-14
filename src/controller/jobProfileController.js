@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const JobProfile = require('../models/jobProfileModel');
 const Student = require('../models/studentModel');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
+const { registerMail, deregisterMail } = require("../services/registerMail.service");
 
 // @desc    Create a new job profile
 // @route   POST /api/jobProfiles
@@ -62,7 +63,7 @@ const getAllJobProfiles = asyncHandler(async (req, res) => {
     const jobProfiles = await JobProfile.find({});
 
     if (jobProfiles.length > 0) {
-        sendSuccessResponse(res, 200, {jobProfiles});
+        sendSuccessResponse(res, 200, { jobProfiles });
     } else {
         sendErrorResponse(res, 404, 'No job profiles found');
     }
@@ -86,7 +87,7 @@ const getJobProfileById = asyncHandler(async (req, res) => {
 // @route   PUT /api/jobProfiles/:id
 // @access  Private
 const updateJobProfile = asyncHandler(async (req, res) => {
-    const { 
+    const {
         company_name,
         offer_type,
         location,
@@ -171,15 +172,28 @@ const registerToJobprofile = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Student already registered')
     }
+    // console.log(jobprofileExists);
     jobprofileExists.applicants.push(student_id);
     studentExists.jobprofiles.push(jobprofile_id);
     const updatedJobProfile = await jobprofileExists.save();
+    console.log(updatedJobProfile)
     const updatedStudent = await studentExists.save();
-    res.status(201).json({
-        message: "registered",
-        updatedJobProfile,
-        updatedStudent
-    })
+    const company_name = updatedJobProfile.company_name;
+    try {
+        // console.log(req.body.student_id);
+        const student_id = studentExists.student_id;
+        const regmail = await registerMail({ student_id, company_name });
+        res.status(201).json({
+            message: "Registered successfully",
+        });
+    } catch (error) {
+        next(error);
+    }
+    // res.status(201).json({
+    //     message: "registered",
+    //     updatedJobProfile,
+    //     updatedStudent
+    // })
 })
 
 const deregisterFromJobprofile = asyncHandler(async (req, res) => {
@@ -204,11 +218,22 @@ const deregisterFromJobprofile = asyncHandler(async (req, res) => {
     studentExists.jobprofiles.pull(jobprofile_id);
     const updatedJobProfile = await jobprofileExists.save();
     const updatedStudent = await studentExists.save();
-    res.status(201).json({
-        message: "deregistered",
-        updatedJobProfile,
-        updatedStudent
-    })
+    const company_name = updatedJobProfile.company_name;
+    try {
+        // console.log(req.body.student_id);
+        const student_id = studentExists.student_id;
+        const regmail = await deregisterMail({ student_id, company_name });
+        res.status(201).json({
+            message: "Deregistered successfully",
+        });
+    } catch (error) {
+        next(error);
+    }
+    // res.status(201).json({
+    //     message: "deregistered",
+    //     updatedJobProfile,
+    //     updatedStudent
+    // })
 })
 
 const addToShortlisted = asyncHandler(async (req, res) => {
@@ -271,9 +296,9 @@ const removeFromShortlisted = asyncHandler(async (req, res) => {
 
 const getJobProfilesOfCompany = asyncHandler(async (req, res) => {
     const company = req.params.id;
-    const jobProfiles = await JobProfile.find({company: company});
+    const jobProfiles = await JobProfile.find({ company: company });
     if (jobProfiles.length > 0) {
-        sendSuccessResponse(res, 200, {jobProfiles});
+        sendSuccessResponse(res, 200, { jobProfiles });
     } else {
         sendErrorResponse(res, 404, 'No job profiles found');
     }
