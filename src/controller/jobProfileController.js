@@ -56,7 +56,7 @@ const createJobProfile = asyncHandler(async (req, res) => {
         console.log(student_id);
         const sendJobMail = await jobProfileMail({ student_id, company_name, createdJobProfile });
         // console.log(relatedStudent);
-        res.status(201).json(createdJobProfile);
+        res.status(201).json({ message: "Job profile created successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
