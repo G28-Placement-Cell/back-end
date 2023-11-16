@@ -61,7 +61,60 @@ async function deregisterMail({ student_id, company_name }) {
     }
 }
 
+async function jobProfileMail({ student_id, company_name, createdJobProfile }) {
+    try {
+        console.log(createdJobProfile)
+        console.log(student_id);
+        console.log(company_name);
+        const mailOptions = {
+            from: `${process.env.NODEMAILER_EMAIL}`,
+            subject: "Registration open for " + company_name,
+            html: `<p><strong>Dear Students,</strong></p>
+            <p><strong>Upcoming placement drive of the company ${company_name} is scheduled.</strong></p>
+            <p><strong>Details of the drive and eligibility criteria are as follows:</strong></p>
+            <ul>
+                <li>Registration Starts on: ${createdJobProfile.registration_start_date}</li>
+                <li>Registration Ends on: ${createdJobProfile.registration_end_date}</li>
+                <li>Offer Type: ${createdJobProfile.offer_type}</li>
+                <li>CTC: ${createdJobProfile.ctc}</li>
+                <li>Stipend: ${createdJobProfile.stipend}</li>
+                <li>Open for: ${createdJobProfile.open_for}</li>
+                <li>Posting location: ${createdJobProfile.location}</li>
+            </ul>
+            <p><strong>Please Do Not Respond back to this E-mail as this is Auto Generated E-mail, contact us at <a href="mailto:g28.placement@gmail.com">g28.placement@gmail.com</a> in case of any doubt.</strong></p>
+            <br />
+            <p>Regards,<br />
+            Placement Cell</p>
+            `
+        };
+
+        // Add each recipient to the 'to' field
+        mailOptions.to = student_id.join(',');
+
+        await transporter.sendMail(mailOptions);
+        // for (let i = 0; i < student_id.length; i++) {
+        //     const email = student_id[i];
+        //     await transporter.sendMail({
+        //         from: `${process.env.NODEMAILER_EMAIL}`,
+        //         to: email,
+        //         subject: "Registration open for" + company_name,
+        //         html: `<p>Job profile open for ${company_name} company.</b>
+        //         Do register if you wish to.
+        //         </p>`,
+        //     });
+
+        //     console.log(`email sent to ${email} for student ${student_id}`);
+        // }
+        return;
+    }
+    catch (err) {
+        if (err.code === 11000) throw new ForbiddenError("Reset already requested");
+        throw new Error(err);
+    }
+}
+
 module.exports = {
     registerMail,
-    deregisterMail
+    deregisterMail,
+    jobProfileMail
 };

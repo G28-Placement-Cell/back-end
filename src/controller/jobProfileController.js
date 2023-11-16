@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const JobProfile = require('../models/jobProfileModel');
 const Student = require('../models/studentModel');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
-const { registerMail, deregisterMail } = require("../services/registerMail.service");
+const { registerMail, deregisterMail, jobProfileMail } = require("../services/registerMail.service");
 
 // @desc    Create a new job profile
 // @route   POST /api/jobProfiles
@@ -24,7 +24,6 @@ const createJobProfile = asyncHandler(async (req, res) => {
             job_description,
             job_description_file,
         } = req.body;
-
         const jobProfile = new JobProfile({
             company,
             company_name,
@@ -40,8 +39,23 @@ const createJobProfile = asyncHandler(async (req, res) => {
             job_description,
             job_description_file,
         });
-
         const createdJobProfile = await jobProfile.save();
+
+        // offer_type = offer_type.toLowerCase();
+        console.log(offer_type)
+        console.log('Created job profile:', createdJobProfile);
+        const relatedStudent = await Student.find({
+            verified: true,
+            registering_for: offer_type.toLowerCase()
+        });
+        // console.log(relatedStudent)
+        const student_id = [];
+        for (let i = 0; i < relatedStudent.length; i++) {
+            student_id.push(relatedStudent[i].email.main);
+        }
+        console.log(student_id);
+        const sendJobMail = await jobProfileMail({ student_id, company_name, createdJobProfile });
+        // console.log(relatedStudent);
         res.status(201).json(createdJobProfile);
     } catch (error) {
         console.error(error);
@@ -308,8 +322,8 @@ const getRegStudentsOfJobProfile = asyncHandler(async (req, res) => {
     const jobProfileId = req.params.id;
     const jobProfile = await JobProfile.findById(jobProfileId);
     if (jobProfile) {
-        const students = await Student.find({jobprofiles: jobProfileId});
-        sendSuccessResponse(res, 200, {students});
+        const students = await Student.find({ jobprofiles: jobProfileId });
+        sendSuccessResponse(res, 200, { students });
     } else {
         sendErrorResponse(res, 404, 'Job profile not found');
     }
