@@ -15,7 +15,7 @@ const {
 const protect = require('../middleware/authmiddleware');
 const { validateJobProfile } = require('../middleware/validatemiddleware.js');
 
-router.route('/').post(validateJobProfile, protect, createJobProfile).get(getAllJobProfiles);
+router.route('/').post(protect, createJobProfile).get(getAllJobProfiles);
 router.route('/:id').get(getJobProfileById).put(validateJobProfile, updateJobProfile).delete(deleteJobProfile);
 router.route('/:id/:stuId').post(protect, registerToJobprofile);
 router.route('/:id/:stuId').delete(protect, deregisterFromJobprofile);

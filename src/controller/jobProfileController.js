@@ -39,10 +39,10 @@ const createJobProfile = asyncHandler(async (req, res) => {
             job_description,
             job_description_file,
         });
+        console.log(offer_type)
         const createdJobProfile = await jobProfile.save();
 
         // offer_type = offer_type.toLowerCase();
-        console.log(offer_type)
         console.log('Created job profile:', createdJobProfile);
         const relatedStudent = await Student.find({
             verified: true,
