@@ -17,6 +17,15 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
+const generateOTP = () => {
+    const digits = "0123456789";
+    let OTP = "";
+    for (let i = 0; i < 6; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+    }
+    return OTP;
+}
 {/* <a href="https://front-end-main-three.vercel.app/password-reset/${reset._id}">Click Here</a> */ }
 
 async function createReset({ student_id }) {
@@ -26,7 +35,7 @@ async function createReset({ student_id }) {
         const email = user.email.main;
         console.log(email)
         if (!user) throw new NotFoundError("User not found");
-        const otp = crypto.randomBytes(32).toString("hex");
+        const otp = generateOTP();
         console.log(user._id);
         const reset = await Reset.create({ userId: user._id, otp: otp });
         console.log(reset);
@@ -36,7 +45,7 @@ async function createReset({ student_id }) {
             subject: "Placement Password Reset",
             html: `<p>Use this OTP to reset your password: <b>${otp}</b></p>
         <p>This OTP will expire in 1 hour</p>
-        <p>Password Reset Link: </p>`,
+        <p>Password Reset Link: <a href="https://placement-cell-student.vercel.app/resetpassword">Reset</a></p>`,
         });
         return reset;
     }
@@ -52,7 +61,7 @@ async function createResetCompany({ email }) {
         console.log(email)
         console.log(user);
         if (!user) throw new NotFoundError("User not found");
-        const otp = crypto.randomBytes(32).toString("hex");
+        const otp = generateOTP();
         console.log(user._id);
         const reset = await Reset.create({ userId: user._id, otp: otp });
         console.log(reset);
@@ -62,7 +71,7 @@ async function createResetCompany({ email }) {
             subject: "Placement Password Reset",
             html: `<p>Use this OTP to reset your password: <b>${otp}</b></p>
         <p>This OTP will expire in 1 hour</p>
-        <p>Password Reset Link: </p>`,
+        <p>Password Reset Link: <a href="https://placement-cell-compnay.vercel.app/resetpassword">Reset</a></p>`,
         });
         return reset;
     }
@@ -78,7 +87,7 @@ async function createResetAdmin({ email }) {
         console.log(email)
         console.log(user);
         if (!user) throw new NotFoundError("User not found");
-        const otp = crypto.randomBytes(32).toString("hex");
+        const otp = generateOTP();
         console.log(user._id);
         const reset = await Reset.create({ userId: user._id, otp: otp });
         console.log(reset);
@@ -88,7 +97,7 @@ async function createResetAdmin({ email }) {
             subject: "Placement Password Reset",
             html: `<p>Use this OTP to reset your password: <b>${otp}</b></p>
         <p>This OTP will expire in 1 hour</p>
-        <p>Password Reset Link: </p>`,
+        <p>Password Reset Link: <a href="https://placement-cell-admin.vercel.app/resetpassword">Reset</a></p>`,
         });
         return reset;
     }

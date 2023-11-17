@@ -54,7 +54,9 @@ const createJobProfile = asyncHandler(async (req, res) => {
             student_id.push(relatedStudent[i].email.main);
         }
         console.log(student_id);
-        const sendJobMail = await jobProfileMail({ student_id, company_name, createdJobProfile });
+        if (student_id.length > 0) {
+            const sendJobMail = await jobProfileMail({ student_id, company_name, createdJobProfile });
+        }
         // console.log(relatedStudent);
         res.status(201).json({ message: "Job profile created successfully" });
     } catch (error) {
