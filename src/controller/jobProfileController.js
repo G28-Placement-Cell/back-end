@@ -4,10 +4,11 @@ const Student = require('../models/studentModel');
 const Company = require('../models/companyModel');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
 const { registerMail, deregisterMail, jobProfileMail } = require("../services/registerMail.service");
-
+const ExcelJS = require('exceljs');
 // @desc    Create a new job profile
 // @route   POST /api/jobProfiles
 // @access  Private
+
 const createJobProfile = asyncHandler(async (req, res) => {
     try {
         const {
@@ -325,16 +326,71 @@ const getJobProfilesOfCompany = asyncHandler(async (req, res) => {
     }
 })
 
+// const getRegStudentsOfJobProfile = asyncHandler(async (req, res) => {
+//     const jobProfileId = req.params.id;
+//     const jobProfile = await JobProfile.findById(jobProfileId);
+//     if (jobProfile) {
+//         const students = await Student.find({ jobprofiles: jobProfileId });
+//         sendSuccessResponse(res, 200, { students });
+//     } else {
+//         sendErrorResponse(res, 404, 'Job profile not found');
+//     }
+// })
+
 const getRegStudentsOfJobProfile = asyncHandler(async (req, res) => {
     const jobProfileId = req.params.id;
+    console.log(req.params.id);
     const jobProfile = await JobProfile.findById(jobProfileId);
+    console.log(jobProfile)
     if (jobProfile) {
         const students = await Student.find({ jobprofiles: jobProfileId });
-        sendSuccessResponse(res, 200, { students });
+        console.log(students);
+        if (students.length > 0) {
+            // Creating an Excel workbook
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Registered Students');
+
+            // Define columns in the Excel sheet
+            worksheet.columns = [
+                { header:'Student id', key:'student_id',width:30},
+                { header: 'Name', key: 'name', width: 20 },
+                { header: 'Email', key: 'email', width: 30 },
+                { header: 'CPI', key: 'cpi', width: 30 },
+                { header: 'Gender', key: 'gender', width: 30 },
+                { header: 'Phone', key: 'phone', width: 30 },
+                // Add more columns as needed to capture student details
+            ];
+
+            // Populate rows with student details
+            students.forEach(student => {
+                worksheet.addRow({
+                    name: student.name, // Replace with actual property names
+                    student_id: student.student_id, // Replace with actual property names
+                    email:student.email.main,
+                    cpi:student.email.cpi,
+                    gender:student.gender,
+                    phone:student.phone_number.main,
+                    // Add more columns' data as needed
+                });
+            });
+
+            // Generate a unique filename for the Excel sheet
+            const fileName = `registered_students_${jobprofile.company_name}.xlsx`;
+
+            // Set response headers to trigger file download in the client
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+
+            // Write the workbook data to response and send to the client
+            await workbook.xlsx.write(res);
+            res.end();
+        } else {
+            sendErrorResponse(res, 404, 'No students found for this job profile');
+        }
     } else {
         sendErrorResponse(res, 404, 'Job profile not found');
     }
-})
+});
 
 module.exports = {
     createJobProfile,
