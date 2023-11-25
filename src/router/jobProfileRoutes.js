@@ -12,7 +12,7 @@ const {
     removeFromShortlisted,
     getJobProfilesOfCompany,
 } = require('../controller/jobProfileController');
-const protect = require('../middleware/authmiddleware');
+const protect = require('../middleware/authCompMiddleware.js');
 const { validateJobProfile } = require('../middleware/validatemiddleware.js');
 
 router.route('/').post(protect, createJobProfile).get(getAllJobProfiles);

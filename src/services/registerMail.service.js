@@ -61,18 +61,19 @@ async function deregisterMail({ student_id, company_name }) {
     }
 }
 
-async function jobProfileMail({ student_id, company_name, createdJobProfile }) {
+async function jobProfileMail({ compname, student_id, company_name, createdJobProfile }) {
     try {
-        console.log(createdJobProfile)
-        console.log(student_id);
-        console.log(company_name);
+        // console.log(createdJobProfile)
+        // console.log(student_id);
+        // console.log(company_name);
         const mailOptions = {
             from: `${process.env.NODEMAILER_EMAIL}`,
-            subject: "Registration open for " + company_name,
+            subject: "Registration open for " + compname,
             html: `<p><strong>Dear Students,</strong></p>
-            <p><strong>Upcoming placement drive of the company ${company_name} is scheduled.</strong></p>
+            <p><strong>Upcoming placement drive of the company ${compname} is scheduled.</strong></p>
             <p><strong>Details of the drive and eligibility criteria are as follows:</strong></p>
             <ul>
+                <li>Profile : ${company_name}</li>
                 <li>Registration Starts on: ${createdJobProfile.registration_start_date}</li>
                 <li>Registration Ends on: ${createdJobProfile.registration_end_date}</li>
                 <li>Offer Type: ${createdJobProfile.offer_type}</li>

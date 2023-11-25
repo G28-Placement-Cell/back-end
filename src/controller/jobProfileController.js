@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const JobProfile = require('../models/jobProfileModel');
 const Student = require('../models/studentModel');
+const Company = require('../models/companyModel');
 const { sendSuccessResponse, sendErrorResponse } = require('../utils/resUtils');
 const { registerMail, deregisterMail, jobProfileMail } = require("../services/registerMail.service");
 
@@ -39,9 +40,13 @@ const createJobProfile = asyncHandler(async (req, res) => {
             job_description,
             job_description_file,
         });
-        console.log(offer_type)
+        // console.log(offer_type)
         const createdJobProfile = await jobProfile.save();
-
+        const companydetail = await Company.findById(company);
+        // console.log(companydetail)
+        const compname = companydetail.companyname;
+        console.log(compname)
+        console.log('ok')
         // offer_type = offer_type.toLowerCase();
         console.log('Created job profile:', createdJobProfile);
         const relatedStudent = await Student.find({
@@ -53,9 +58,9 @@ const createJobProfile = asyncHandler(async (req, res) => {
         for (let i = 0; i < relatedStudent.length; i++) {
             student_id.push(relatedStudent[i].email.main);
         }
-        console.log(student_id);
+        // console.log(student_id);
         if (student_id.length > 0) {
-            const sendJobMail = await jobProfileMail({ student_id, company_name, createdJobProfile });
+            const sendJobMail = await jobProfileMail({ compname, student_id, company_name, createdJobProfile });
         }
         // console.log(relatedStudent);
         res.status(201).json({ message: "Job profile created successfully" });
