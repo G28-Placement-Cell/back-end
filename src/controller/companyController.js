@@ -16,6 +16,7 @@ const authCompany = asyncHandler(async (req, res) => {
     res.status(201).json({
         message: "auth"
     })
+    
 })
 
 const getCompanyProfile = asyncHandler(async (req, res) => {
