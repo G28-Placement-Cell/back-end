@@ -73,9 +73,9 @@ async function jobProfileMail({ compname, student_id, company_name, createdJobPr
             <p><strong>Upcoming placement drive of the company ${compname} is scheduled.</strong></p>
             <p><strong>Details of the drive and eligibility criteria are as follows:</strong></p>
             <ul>
-                <li>Profile : ${company_name}</li>
-                <li>Registration Starts on: ${createdJobProfile.registration_start_date}</li>
-                <li>Registration Ends on: ${createdJobProfile.registration_end_date}</li>
+                <li>Job Profile : ${company_name}</li>
+                <li>Registration Starts on: ${createdJobProfile.registration_start_date.toLocaleDateString('en-GB', options)}</li>
+                <li>Registration Ends on: ${createdJobProfile.registration_end_date.toLocaleDateString('en-GB', options)}</li>
                 <li>Offer Type: ${createdJobProfile.offer_type}</li>
                 <li>CTC: ${createdJobProfile.ctc}</li>
                 <li>Stipend: ${createdJobProfile.stipend}</li>
