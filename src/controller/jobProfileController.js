@@ -9,6 +9,7 @@ const ExcelJS = require('exceljs');
 // @desc    Create a new job profile
 // @route   POST /api/jobProfiles
 // @access  Private
+
 const createJobProfile = asyncHandler(async (req, res) => {
     try {
         const {
