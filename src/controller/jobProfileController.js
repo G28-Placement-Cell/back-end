@@ -357,16 +357,27 @@ const getRegStudentsOfJobProfile = asyncHandler(async (req, res) => {
 
             // Define columns in the Excel sheet
             worksheet.columns = [
-                { header: 'Name', key: 'name', width: 20 },
+                { header: 'Student ID', key: 'student_id', width: 30 },
+                { header: 'Name', key: 'name', width: 30 },
                 { header: 'Email', key: 'email', width: 30 },
+                { header: 'Gender', key: 'gender', width: 30 },
+                { header: 'CPI', key: 'cpi', width: 30 },
+                { header: 'Contact', key: 'contact', width: 30 },
+                { header: 'Skype ID', key: 'skype', width: 50 },
+
                 // Add more columns as needed to capture student details
             ];
 
             // Populate rows with student details
             students.forEach(student => {
                 worksheet.addRow({
+                    student_id: student.student_id, // Replace with actual property names
                     name: student.name, // Replace with actual property names
                     email: student.email.main, // Replace with actual property names
+                    gender: student.gender,
+                    cpi: student.cpi,
+                    contact: student.phone_number.main,
+                    skype: student.skype_id
                     // Add more columns' data as needed
                 });
             });
