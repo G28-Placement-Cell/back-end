@@ -13,9 +13,12 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
+const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'UTC' };
+
 {/* <a href="https://front-end-main-three.vercel.app/password-reset/${reset._id}">Click Here</a> */ }
 
-async function registerMail({ student_id, company_name }) {
+async function registerMail({ compName, student_id, company_name }) {
     try {
         console.log(student_id);
         const user = await Student.findOne({ student_id: student_id });
@@ -25,8 +28,8 @@ async function registerMail({ student_id, company_name }) {
         await transporter.sendMail({
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
-            subject: "Registration Successful in " + company_name,
-            html: `<p>Registration Successfull in ${company_name} company.</b>
+            subject: "Registration Successful in " + compName,
+            html: `<p>Registration Successfull in <strong>${compName}</strong> company.</b>
             Thank you for registering.</p>`,
         });
         return;
@@ -37,7 +40,7 @@ async function registerMail({ student_id, company_name }) {
     }
 }
 
-async function deregisterMail({ student_id, company_name }) {
+async function deregisterMail({compName, student_id, company_name }) {
     try {
         console.log(student_id);
         const user = await Student.findOne({ student_id: student_id });
@@ -47,8 +50,8 @@ async function deregisterMail({ student_id, company_name }) {
         await transporter.sendMail({
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
-            subject: "DeRegistration Successful in " + company_name,
-            html: `<p>DeRegistration Successfull in ${company_name} company.</b>
+            subject: "DeRegistration Successful in " + compName,
+            html: `<p>DeRegistration Successfull in ${compName} company.</b>
             Do register again if you wish to.
             </p>
             `,
@@ -73,14 +76,14 @@ async function jobProfileMail({ compname, student_id, company_name, createdJobPr
             <p><strong>Upcoming placement drive of the company ${compname} is scheduled.</strong></p>
             <p><strong>Details of the drive and eligibility criteria are as follows:</strong></p>
             <ul>
-                <li>Job Profile : ${company_name}</li>
-                <li>Registration Starts on: ${createdJobProfile.registration_start_date.toLocaleDateString('en-GB', options)}</li>
-                <li>Registration Ends on: ${createdJobProfile.registration_end_date.toLocaleDateString('en-GB', options)}</li>
-                <li>Offer Type: ${createdJobProfile.offer_type}</li>
-                <li>CTC: ${createdJobProfile.ctc}</li>
-                <li>Stipend: ${createdJobProfile.stipend}</li>
-                <li>Open for: ${createdJobProfile.open_for}</li>
-                <li>Posting location: ${createdJobProfile.location}</li>
+                <li><strong>Job Profile :</strong> ${company_name}</li>
+                <li><strong>Registration Starts on:</strong> ${createdJobProfile.registration_start_date.toLocaleDateString('en-GB', options)}</li>
+                <li><strong>Registration Ends on:</strong> ${createdJobProfile.registration_end_date.toLocaleDateString('en-GB', options)}</li>
+                <li><strong>Offer Type:</strong> ${createdJobProfile.offer_type}</li>
+                <li><strong>CTC (in LPA):</strong> ${createdJobProfile.ctc}</li>
+                <li><strong>Stipend:</strong> ${createdJobProfile.stipend}</li>
+                <li><strong>Open for:</strong> ${createdJobProfile.open_for}</li>
+                <li><strong>Posting location:</strong> ${createdJobProfile.location}</li>
             </ul>
             <p><strong>Please Do Not Respond back to this E-mail as this is Auto Generated E-mail, contact us at <a href="mailto:g28.placement@gmail.com">g28.placement@gmail.com</a> in case of any doubt.</strong></p>
             <br />

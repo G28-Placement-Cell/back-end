@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const protect = require('../middleware/authCompMiddleware');
+const protectStudent = require('../middleware/authmiddleware');
 const protectAdmin = require('../middleware/authAdminMiddleware');
 const {
     authCompany,
@@ -34,8 +35,9 @@ router.post('/auth', authCompany);
 router.post('/register', registerCompany);
 router.post('/login', loginCompany);
 router.get('/profile', protect, getCompanyProfile);
+router.get('/student/:id', protectStudent, getCompanyProfile);
 router.post('/logout', logOutCompany);
-router.get('/name/:id', getCompanyName);
+router.get('/name/:id', protectStudent, getCompanyName);
 // router.post('/jobprofile', protect, addJobProfile);
 // router.get('/jobprofile', protect, viewJobProfile);
 // router.get('/jobprofile/:id', protect, viewJobProfileById);
