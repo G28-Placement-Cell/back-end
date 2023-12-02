@@ -181,7 +181,8 @@ const registerToJobprofile = asyncHandler(async (req, res) => {
     const jobprofile_id = req.params.id;
     const student_id = req.params.stuId;
     const jobprofileExists = await JobProfile.findById(jobprofile_id);
-    const compName = await Company.findById(jobprofileExists.company).companyname;
+    const companydetail = await Company.findById(jobprofileExists.company);
+    const compname = companydetail.companyname;
     const studentExists = await Student.findById(student_id);
     if (!jobprofileExists) {
         res.status(400)
@@ -206,7 +207,7 @@ const registerToJobprofile = asyncHandler(async (req, res) => {
     try {
         // console.log(req.body.student_id);
         const student_id = studentExists.student_id;
-        const regmail = await registerMail({ compName, student_id, company_name });
+        const regmail = await registerMail({ compname, student_id, company_name });
         res.status(201).json({
             message: "Registered successfully",
         });
@@ -224,7 +225,8 @@ const deregisterFromJobprofile = asyncHandler(async (req, res) => {
     const jobprofile_id = req.params.id;
     const student_id = req.params.stuId;
     const jobprofileExists = await JobProfile.findById(jobprofile_id);
-    const compName = await Company.findById(jobprofileExists.company).companyname;
+    const companydetail = await Company.findById(jobprofileExists.company);
+    const compname = companydetail.companyname;
     const studentExists = await Student.findById(student_id);
     if (!jobprofileExists) {
         res.status(400)
@@ -247,7 +249,7 @@ const deregisterFromJobprofile = asyncHandler(async (req, res) => {
     try {
         // console.log(req.body.student_id);
         const student_id = studentExists.student_id;
-        const regmail = await deregisterMail({compName, student_id, company_name });
+        const regmail = await deregisterMail({ compname, student_id, company_name });
         res.status(201).json({
             message: "Deregistered successfully",
         });

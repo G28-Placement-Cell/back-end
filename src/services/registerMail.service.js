@@ -29,8 +29,9 @@ async function registerMail({ compName, student_id, company_name }) {
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
             subject: "Registration Successful in " + compName,
-            html: `<p>Registration Successfull in <strong>${compName}</strong> company.</b>
-            Thank you for registering.</p>`,
+            html: `<p>Registration Successfull in <strong>${compName}</strong> company for ${company_name} job profile.</b></p>
+            </br>
+            <p>Thank you for registering.</p>`,
         });
         return;
     }
@@ -40,7 +41,7 @@ async function registerMail({ compName, student_id, company_name }) {
     }
 }
 
-async function deregisterMail({compName, student_id, company_name }) {
+async function deregisterMail({ compname, student_id, company_name }) {
     try {
         console.log(student_id);
         const user = await Student.findOne({ student_id: student_id });
@@ -50,9 +51,10 @@ async function deregisterMail({compName, student_id, company_name }) {
         await transporter.sendMail({
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
-            subject: "DeRegistration Successful in " + compName,
-            html: `<p>DeRegistration Successfull in ${compName} company.</b>
-            Do register again if you wish to.
+            subject: "DeRegistration Successful in " + compname,
+            html: `<p>DeRegistration Successfull in ${compname} company for ${company_name} jobprofile.</b>
+            </br></p>
+            <p>Do register again if you wish to.
             </p>
             `,
         });
