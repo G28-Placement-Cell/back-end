@@ -203,7 +203,7 @@ const registerToJobprofile = asyncHandler(async (req, res) => {
     const updatedJobProfile = await jobprofileExists.save();
     console.log(updatedJobProfile)
     const updatedStudent = await studentExists.save();
-    const company_name = updatedJobProfile.company_name;
+    const company_name = jobprofileExists.company_name;
     try {
         // console.log(req.body.student_id);
         const student_id = studentExists.student_id;

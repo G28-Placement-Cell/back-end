@@ -18,7 +18,7 @@ const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-di
 
 {/* <a href="https://front-end-main-three.vercel.app/password-reset/${reset._id}">Click Here</a> */ }
 
-async function registerMail({ compName, student_id, company_name }) {
+async function registerMail({ compname, student_id, company_name }) {
     try {
         console.log(student_id);
         const user = await Student.findOne({ student_id: student_id });
@@ -28,8 +28,8 @@ async function registerMail({ compName, student_id, company_name }) {
         await transporter.sendMail({
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
-            subject: "Registration Successful in " + compName,
-            html: `<p>Registration Successfull in <strong>${compName}</strong> company for ${company_name} job profile.</b></p>
+            subject: "Registration Successful in " + compname,
+            html: `<p>Registration Successfull in <strong>${compname}</strong> company for ${company_name} job profile.</b></p>
             </br>
             <p>Thank you for registering.</p>`,
         });
@@ -71,6 +71,8 @@ async function jobProfileMail({ compname, student_id, company_name, createdJobPr
         // console.log(createdJobProfile)
         // console.log(student_id);
         // console.log(company_name);
+        const offer_type=createdJobProfile.offer_type.toUpperCase();
+        const openfor=createdJobProfile.open_for.toUpperCase();
         const mailOptions = {
             from: `${process.env.NODEMAILER_EMAIL}`,
             subject: "Registration open for " + compname,
