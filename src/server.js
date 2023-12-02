@@ -26,6 +26,7 @@ app.use(bodyParser.json({ limit: '3mb' }));
 app.use(bodyParser.urlencoded({ limit: '3mb', extended: true }));
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
