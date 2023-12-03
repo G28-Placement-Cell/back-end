@@ -37,7 +37,7 @@ router.post('/login', loginCompany);
 router.get('/profile', protect, getCompanyProfile);
 router.get('/student/:id', protectStudent, getCompanyProfile);
 router.post('/logout', logOutCompany);
-router.get('/name/:id', protectStudent, getCompanyName);
+router.get('/name/:id', getCompanyName);
 // router.post('/jobprofile', protect, addJobProfile);
 // router.get('/jobprofile', protect, viewJobProfile);
 // router.get('/jobprofile/:id', protect, viewJobProfileById);
