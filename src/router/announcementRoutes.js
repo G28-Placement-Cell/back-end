@@ -30,8 +30,8 @@ router.route('/admin/student').get(adminprotect, getAnnouncementsByAdminForStude
 router.route('/admin/student/student').get(protect, getAnnouncementsByAdminForStudent);
 router.route('/admin/student').post(adminprotect,createAnnouncementByAdminForStudent);
 router.route('/admin/company').post(compprotect,createAnnouncementByAdminForCompany);
-router.route('/admin/companyAnnouncements').get(adminprotect,getAnnouncementsByAllCompanies);
-router.route('/student/companyAnnouncements').get(protect,getAnnouncementsByAllCompanies);
+router.route('/admin/companyAnnouncements').get(getAnnouncementsByAllCompanies);
+router.route('/student/companyAnnouncements').get(getAnnouncementsByAllCompanies);
 
 router.route('/company/:id').get(compprotect,getAnnouncementsByCompanyId);
 router.route('/company/:id').post(compprotect,createAnnouncementByCompanyForStudent);
