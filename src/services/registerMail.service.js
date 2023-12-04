@@ -29,7 +29,7 @@ async function registerMail({ compname, student_id, company_name }) {
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
             subject: "Registration Successful in " + compname,
-            html: `<p>Registration Successfull in <strong>${compname}</strong> company for ${company_name} job profile.</b></p>
+            html: `<p>Registration Successfull in <strong>${compname}</strong> company for <strong>${company_name}</strong> job profile.</b></p>
             </br>
             <p>Thank you for registering.</p>`,
         });
@@ -52,7 +52,7 @@ async function deregisterMail({ compname, student_id, company_name }) {
             from: `${process.env.NODEMAILER_EMAIL}`,
             to: email,
             subject: "DeRegistration Successful in " + compname,
-            html: `<p>DeRegistration Successfull in ${compname} company for ${company_name} jobprofile.</b>
+            html: `<p>DeRegistration Successfull in <strong>${compname}</strong> company for <strong>${company_name}</strong> jobprofile.</b>
             </br></p>
             <p>Do register again if you wish to.
             </p>
@@ -83,10 +83,10 @@ async function jobProfileMail({ compname, student_id, company_name, createdJobPr
                 <li><strong>Job Profile :</strong> ${company_name}</li>
                 <li><strong>Registration Starts on:</strong> ${createdJobProfile.registration_start_date.toLocaleDateString('en-GB', options)}</li>
                 <li><strong>Registration Ends on:</strong> ${createdJobProfile.registration_end_date.toLocaleDateString('en-GB', options)}</li>
-                <li><strong>Offer Type:</strong> ${createdJobProfile.offer_type}</li>
+                <li><strong>Offer Type:</strong> ${offer_type}</li>
                 <li><strong>CTC (in LPA):</strong> ${createdJobProfile.ctc}</li>
                 <li><strong>Stipend:</strong> ${createdJobProfile.stipend}</li>
-                <li><strong>Open for:</strong> ${createdJobProfile.open_for}</li>
+                <li><strong>Open for:</strong> ${open_for}</li>
                 <li><strong>Posting location:</strong> ${createdJobProfile.location}</li>
             </ul>
             <p><strong>Please Do Not Respond back to this E-mail as this is Auto Generated E-mail, contact us at <a href="mailto:g28.placement@gmail.com">g28.placement@gmail.com</a> in case of any doubt.</strong></p>
